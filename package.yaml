@@ -1,0 +1,68 @@
+name:                boggle
+version:             0.1.0.0
+github:              "cbiffle/boggle"
+license:             BSD3
+author:              "Cliff L. Biffle"
+maintainer:          "code@cliffle.com"
+copyright:           "2018 Cliff L. Biffle"
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/cbiffle/boggle#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+data-files:
+- bench/dict.txt
+
+library:
+  source-dirs: src
+  dependencies:
+  - containers
+  - deepseq
+  - QuickCheck
+  - split
+
+  #executables:
+  #  boggle-exe:
+  #    main:                Main.hs
+  #    source-dirs:         app
+  #    ghc-options:
+  #    - -threaded
+  #    - -rtsopts
+  #    - -with-rtsopts=-N
+  #    dependencies:
+  #    - boggle
+
+tests:
+  boggle-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - boggle
+    - hspec
+    - QuickCheck
+    - split
+
+benchmarks:
+  boggle-bench:
+    source-dirs:  bench
+    main:         Main.hs
+    ghc-options:
+    - -O2
+    - -threaded
+    - -rtsopts
+    dependencies:
+    - boggle
+    - criterion
+    - deepseq
