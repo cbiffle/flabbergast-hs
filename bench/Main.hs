@@ -17,6 +17,7 @@ import qualified B6
 import qualified B7
 import qualified B8
 import qualified B9
+import qualified B10
 import qualified B11
 
 loadFile name = do
@@ -35,9 +36,8 @@ sbench name d b =
   let preD :: CookedDict s = cookDict @s d
       preB :: CookedBoard s = cookBoard @s b
   in bgroup name
-    [{- bench "cookDict" $ nf (cookDict @s) d
- --   , bench "cookBoard" $ nf (cookBoard @s) b
-    ,-} bench "solve" $ nf (uncurry (solve @s)) (preD, preB)
+    [ bench "solve-only" $ nf (uncurry (solve @s)) (preD, preB)
+    , bench "cook-and-solve" $ nf (uncurry (cookAndSolve @s)) (d, b)
     ]
 
 main = do
@@ -60,6 +60,9 @@ main = do
             [ sbench @B5.SetBased "B5" rawDict board
             , sbench @B11.SetBased "B11" rawDict board
             ]
+          ++
+          [ sbench @B10.SetBased "B10" rawDict board
+          ]
       , bgroup "dp"
           [ sbench @B6.DP "B6" rawDict board
           , sbench @B7.DP "B7" rawDict board

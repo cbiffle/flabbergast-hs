@@ -1,5 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 module Base where
 
 import Control.Monad (replicateM, forM_)
@@ -18,6 +20,10 @@ class Solver s where
   cookDict :: RawDictionary -> CookedDict s
   cookBoard :: RawBoard -> CookedBoard s
   solve :: CookedDict s -> CookedBoard s -> [(String, Path)]
+
+cookAndSolve :: forall s. (Solver s)
+             => RawDictionary -> RawBoard -> [(String, Path)]
+cookAndSolve d b = solve @s (cookDict @s d) (cookBoard @s b)
 
 boardWidth, boardHeight :: [[a]] -> Int
 boardWidth = length . head

@@ -1,8 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
--- | Set-based filtered dictionary with prefix set. This is significantly more
--- expensive than its predecessor; I should probably move to a prefix tree.
-module B10 where
+-- | Set-based filtered dictionary with prefix set.
+module B10 (SetBased) where
 
 
 import qualified Data.Set as S
@@ -41,8 +40,9 @@ instance Solver SetBased where
   cookBoard b = CBoard b $ sort $ concat b
 
   solve d (CBoard b cs) =
-    let d' = S.fromList $ [rw | (rw, sw, _) <- d, sw `isSubsequenceOf` cs]
-        pre = S.fromList $ [t | (_, _, ts) <- d, t <- ts]
+    let df = [e | e@(_, sw, _) <- d, sw `isSubsequenceOf` cs]
+        d' = S.fromList $ [rw | (rw, _, _) <- df]
+        pre = S.fromList $ [t | (_, _, ts) <- df, t <- ts]
     in [r | pos <- positions b
           , r <- search d' pre b (pos `extendPath` emptyPath)
                                  [b !! snd pos !! fst pos]
