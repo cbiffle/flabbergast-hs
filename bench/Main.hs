@@ -19,6 +19,7 @@ import qualified B8
 import qualified B9
 import qualified B10
 import qualified B11
+import qualified B12
 
 loadFile name = do
   p <- getDataFileName name
@@ -64,9 +65,12 @@ main = do
           [ sbench @B10.SetBased "B10" rawDict board
           ]
       , bgroup "dp"
-          [ sbench @B6.DP "B6" rawDict board
+          [{- sbench @B6.DP "B6" rawDict board
           , sbench @B7.DP "B7" rawDict board
           , sbench @B8.DP "B8" rawDict board
-          , sbench @B9.DP "B9" rawDict board
+          ,-} sbench @B9.DP "B9" rawDict board
+          ]
+      , bgroup "trie"
+          [ sbench @B12.TrieBased "B12" rawDict board
           ]
       ]

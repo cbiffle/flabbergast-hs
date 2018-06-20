@@ -2,6 +2,7 @@
 -- | Trie-based full dictionary using ByteStrings.
 module B12 where
 
+import Control.DeepSeq (NFData(..))
 import qualified Data.Trie as T
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
@@ -10,6 +11,9 @@ import Base
 import B4 (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
 
 type Dictionary = T.Trie ()
+
+instance NFData a => NFData (T.Trie a) where
+  rnf = rnf . T.toList
 
 search :: Dictionary -> RawBoard -> SPath -> B.ByteString -> [(String, Path)]
 search d b path word
