@@ -4,7 +4,7 @@
 --
 -- Rather than using dynamic programming to implement a cheap filter as in B6,
 -- this uses it to generate actual paths.
-module B7 (DP) where
+module DP.OnePass (T) where
 
 import Control.Arrow ((&&&))
 import Data.List (foldl')
@@ -33,13 +33,13 @@ search1 :: RawBoard -> String -> [(String, Path)]
 search1 b w = map (\p -> (w, reverse p)) $
              S.toList $ S.unions $ concat $ cheap b w
 
-data DP
+data T
 
-instance Solver DP where
-  type CookedDict DP = RawDictionary
+instance Solver T where
+  type CookedDict T = RawDictionary
   cookDict = id
 
-  type CookedBoard DP = RawBoard
+  type CookedBoard T = RawBoard
   cookBoard = id
 
   solve d b = [r | word <- d

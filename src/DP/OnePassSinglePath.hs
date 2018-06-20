@@ -4,7 +4,7 @@
 --
 -- This exploits the fact that a word only counts for points once per board,
 -- by not recording multiple paths per square.
-module B8 (DP) where
+module DP.OnePassSinglePath (T) where
 
 import Data.List (foldl')
 import Data.Maybe (listToMaybe, maybeToList, catMaybes)
@@ -32,13 +32,13 @@ search1 :: RawBoard -> String -> Maybe (String, Path)
 search1 b w = fmap (\p -> (w, reverse p)) $
              listToMaybe $ catMaybes $ concat $ cheap b w
 
-data DP
+data T
 
-instance Solver DP where
-  type CookedDict DP = RawDictionary
+instance Solver T where
+  type CookedDict T = RawDictionary
   cookDict = id
 
-  type CookedBoard DP = RawBoard
+  type CookedBoard T = RawBoard
   cookBoard = id
 
   solve d b = [r | word <- d

@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
 -- | Set-based filtered dictionary with prefix set.
-module B10 (SetBased) where
+module Traversal.FilteredPrefixSet (T) where
 
 
 import qualified Data.Set as S
@@ -10,7 +10,8 @@ import Data.List (sort, isSubsequenceOf, tails)
 import Control.DeepSeq (NFData(..))
 import Base
 
-import B4 (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
+import Traversal.SetPath
+  (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
 
 search :: S.Set String -> S.Set String -> RawBoard -> SPath -> String
        -> [(String, Path)]
@@ -29,14 +30,14 @@ data CBoard = CBoard !RawBoard -- ^ The board.
 instance NFData CBoard where
   rnf (CBoard b cs) = rnf (b, cs)
 
-data SetBased
+data T
 
-instance Solver SetBased where
-  type CookedDict SetBased = [(String, String, [String])]
+instance Solver T where
+  type CookedDict T = [(String, String, [String])]
                           -- reversed, sorted, reversed prefixes
   cookDict = fmap (\w -> let r = reverse w in (r, sort w, tails r))
 
-  type CookedBoard SetBased = CBoard
+  type CookedBoard T = CBoard
   cookBoard b = CBoard b $ sort $ concat b
 
   solve d (CBoard b cs) =

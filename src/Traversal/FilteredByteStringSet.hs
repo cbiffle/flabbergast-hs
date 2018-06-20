@@ -2,7 +2,7 @@
 
 -- | Derived from B5 (set-based filtered dictionary) but using ByteString.
 -- The way we're using strings, ByteString is not an obvious win.
-module B11 where
+module Traversal.FilteredByteStringSet (T) where
 
 import qualified Data.Set as S
 import qualified Data.ByteString.Lazy as B
@@ -13,7 +13,8 @@ import Data.List (sort)
 import Control.DeepSeq (NFData(..))
 import Base
 
-import B4 (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
+import Traversal.SetPath
+  (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
 
 isSubsequenceOf :: ByteString -> ByteString -> Bool
 isSubsequenceOf as bs
@@ -45,13 +46,13 @@ data CBoard = CBoard !RawBoard -- ^ The board.
 instance NFData CBoard where
   rnf (CBoard b cs) = rnf (b, cs)
 
-data SetBased
+data T
 
-instance Solver SetBased where
-  type CookedDict SetBased = [(ByteString, ByteString)] -- reversed, sorted
+instance Solver T where
+  type CookedDict T = [(ByteString, ByteString)] -- reversed, sorted
   cookDict = fmap ((B.reverse . BC.pack)  &&& (BC.pack . sort))
 
-  type CookedBoard SetBased = CBoard
+  type CookedBoard T = CBoard
   cookBoard b = CBoard b $ BC.pack $ sort $ concat b
 
   solve d (CBoard b cs) =

@@ -1,5 +1,8 @@
 {-# LANGUAGE TypeFamilies #-}
-module B4 where
+module Traversal.SetPath
+  ( T
+  , SPath, emptyPath, extendPath, notInPath, pathList, pathHead
+  )  where
 
 import qualified Data.Set as S
 import Base
@@ -27,13 +30,13 @@ search d b path word =
      , r <- search d b p' w'
      ]
 
-data SetBased
+data T
 
-instance Solver SetBased where
-  type CookedDict SetBased = Dictionary
+instance Solver T where
+  type CookedDict T = Dictionary
   cookDict = S.fromList . fmap reverse
 
-  type CookedBoard SetBased = RawBoard
+  type CookedBoard T = RawBoard
   cookBoard = id
 
   solve d b = [r | pos <- positions b

@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies #-}
 -- | Trie-based full dictionary using ByteStrings.
-module B12 where
+module Traversal.Trie (T) where
 
 import Control.DeepSeq (NFData(..))
 import qualified Data.Trie as T
@@ -8,7 +8,8 @@ import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
 import Base
 
-import B4 (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
+import Traversal.SetPath
+  (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
 
 type Dictionary = T.Trie ()
 
@@ -28,13 +29,13 @@ search d b path word
      , r <- search (w' `T.submap` d) b p' w'
      ]
 
-data TrieBased
+data T
 
-instance Solver TrieBased where
-  type CookedDict TrieBased = Dictionary
+instance Solver T where
+  type CookedDict T = Dictionary
   cookDict = T.fromList . fmap (\s -> (BC.pack s, ()))
 
-  type CookedBoard TrieBased = RawBoard
+  type CookedBoard T = RawBoard
   cookBoard = id
 
   solve d b = [r | pos <- positions b

@@ -9,7 +9,7 @@
 -- The down side of this approach is that we can't construct the dictionary set
 -- until we've seen the board, so set construction time counts toward solve
 -- time. But we *can* preprocess the dictionary in board-independent ways.
-module B5 where
+module Traversal.FilteredSetPath (T) where
 
 
 import qualified Data.Set as S
@@ -18,7 +18,8 @@ import Data.List (sort, isSubsequenceOf)
 import Control.DeepSeq (NFData(..))
 import Base
 
-import B4 (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
+import Traversal.SetPath
+  (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
 
 search :: S.Set String -> RawBoard -> SPath -> String -> [(String, Path)]
 search d b path word =
@@ -35,13 +36,13 @@ data CBoard = CBoard !RawBoard -- ^ The board.
 instance NFData CBoard where
   rnf (CBoard b cs) = rnf (b, cs)
 
-data SetBased
+data T
 
-instance Solver SetBased where
-  type CookedDict SetBased = [(String, String)] -- reversed, sorted
+instance Solver T where
+  type CookedDict T = [(String, String)] -- reversed, sorted
   cookDict = fmap (reverse &&& sort)
 
-  type CookedBoard SetBased = CBoard
+  type CookedBoard T = CBoard
   cookBoard b = CBoard b $ sort $ concat b
 
   solve d (CBoard b cs) =

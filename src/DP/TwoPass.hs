@@ -7,7 +7,7 @@
 -- if that succeeds. Because the fuzzy search is very cheap, we do it per word
 -- in the dictionary instead of per place on the board. Once we know a word is
 -- possible, we do the expensive search for all instances of it.
-module B6 (DP) where
+module DP.TwoPass (T) where
 
 import Control.Arrow ((&&&))
 import Data.List (sort, isSubsequenceOf)
@@ -40,13 +40,13 @@ expensive b target = [r | p <- positions b
          , r <- search cs (n : path)
          ]
 
-data DP
+data T
 
-instance Solver DP where
-  type CookedDict DP = RawDictionary
+instance Solver T where
+  type CookedDict T = RawDictionary
   cookDict = id
 
-  type CookedBoard DP = RawBoard
+  type CookedBoard T = RawBoard
   cookBoard = id
 
   solve d b = [r | word <- d

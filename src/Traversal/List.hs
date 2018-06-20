@@ -1,5 +1,5 @@
 {-# LANGUAGE TypeFamilies #-}
-module B1 where
+module Traversal.List (T) where
 
 import Base
 
@@ -15,11 +15,11 @@ search d b path word =
          , r <- search d b p' w'
          ]
 
-data Naive
+data T
 
-instance Solver Naive where
-  type CookedDict Naive = RawDictionary
-  type CookedBoard Naive = RawBoard
+instance Solver T where
+  type CookedDict T = RawDictionary
+  type CookedBoard T = RawBoard
   cookDict = id
   cookBoard = id
   solve d b = [r | pos <- positions b

@@ -7,7 +7,7 @@
 -- Instead of (ab)using lists as a cartesian grid, we linearize the space of
 -- tiles into a Vector, and precompute how to traverse it in a Cartesian
 -- fashion.
-module B9 (DP) where
+module DP.OnePassSinglePathVec (T) where
 
 import Control.Arrow ((&&&))
 import Control.DeepSeq(NFData(..))
@@ -62,13 +62,13 @@ search1 b w =
   fmap (\p -> (w, reverse p)) $
   listToMaybe $ catMaybes $ V.toList $ goVec $ cheap b w
 
-data DP
+data T
 
-instance Solver DP where
-  type CookedDict DP = RawDictionary
+instance Solver T where
+  type CookedDict T = RawDictionary
   cookDict = id
 
-  type CookedBoard DP = GridOf Char
+  type CookedBoard T = GridOf Char
   cookBoard = mkGridOf
                 
   solve d b = [r | word <- d
