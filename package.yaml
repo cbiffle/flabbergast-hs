@@ -30,6 +30,7 @@ library:
   - split
   - vector
   - bytestring
+  - bytestring-trie
 
   #executables:
   #  boggle-exe:
