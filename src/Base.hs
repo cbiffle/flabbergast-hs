@@ -2,8 +2,9 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module Base where
 
-import Control.Monad (replicateM)
+import Control.Monad (replicateM, forM_)
 import Test.QuickCheck
+import Data.List (group, sort, intercalate, (\\))
 import Data.List.Split (chunksOf)
 
 type RawDictionary = [String]
@@ -59,5 +60,31 @@ instance Arbitrary Boggle92 where
   arbitrary = Boggle92 <$> arbitraryBoard dice92 4 4
 
 --------------------------------------------------------------------------------
+-- Rules checking
 
+-- | Checks that the 'word' claimed to be present at 'path' in 'b' is actually
+-- there.
+checkWord :: RawBoard -> String -> Path -> Either String ()
+checkWord b word path = forM_ (zip word path) $ \(c, p) ->
+  if b `tile` p == c
+    then pure ()
+    else Left $ concat ["Board does not contain '", [c], "' at ", show p]
 
+-- | Checks that the path is internally valid, i.e. does not self-intersect.
+checkPath :: Path -> Either String ()
+checkPath ps = forM_ (group $ sort ps) $ \pgroup ->
+  case pgroup of
+    [_] -> pure ()
+    (p : _) -> Left $ concat ["Position ", show p, " appears "
+                             , show (length pgroup), " times in path"]
+
+checkLegalWords :: RawDictionary -> [String] -> Either String ()
+checkLegalWords d ws = case ws \\ d of
+  [] -> pure ()
+  illegal -> Left $ "Illegal words: " ++ intercalate " " illegal
+
+checkPlay :: RawDictionary -> RawBoard -> [(String, Path)] -> Either String ()
+checkPlay d b results = do
+  mapM_ (uncurry (checkWord b)) results
+  mapM_ checkPath $ map snd results
+  checkLegalWords d $ map fst results
