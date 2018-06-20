@@ -7,7 +7,7 @@
 -- if that succeeds. Because the fuzzy search is very cheap, we do it per word
 -- in the dictionary instead of per place on the board. Once we know a word is
 -- possible, we do the expensive search for all instances of it.
-module B6 where
+module B6 (DP) where
 
 import Control.Arrow ((&&&))
 import Data.List (sort, isSubsequenceOf)

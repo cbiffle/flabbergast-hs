@@ -18,17 +18,17 @@ class Solver s where
   cookBoard :: RawBoard -> CookedBoard s
   solve :: CookedDict s -> CookedBoard s -> [(String, Path)]
 
-boardWidth, boardHeight :: RawBoard -> Int
+boardWidth, boardHeight :: [[a]] -> Int
 boardWidth = length . head
 boardHeight = length
 
 b `tile` (x, y) = b !! y !! x
 
-positions :: RawBoard -> [Pos]
-positions b = [(x, y) | x <- [0 .. boardWidth b - 1]
-                      , y <- [0 .. boardHeight b - 1]]
+positions :: [[a]] -> [Pos]
+positions b = [(x, y) | y <- [0 .. boardHeight b - 1]
+                      , x <- [0 .. boardWidth b - 1]]
 
-nextSteps :: RawBoard -> Pos -> [Pos]
+nextSteps :: [[a]] -> Pos -> [Pos]
 nextSteps b (x, y) =
   let w = boardWidth b
       h = boardHeight b
@@ -57,4 +57,7 @@ newtype Boggle92 = Boggle92 RawBoard
 
 instance Arbitrary Boggle92 where
   arbitrary = Boggle92 <$> arbitraryBoard dice92 4 4
+
+--------------------------------------------------------------------------------
+
 

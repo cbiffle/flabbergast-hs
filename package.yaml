@@ -28,6 +28,7 @@ library:
   - deepseq
   - QuickCheck
   - split
+  - vector
 
   #executables:
   #  boggle-exe:
