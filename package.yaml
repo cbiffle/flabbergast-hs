@@ -29,6 +29,7 @@ library:
   - QuickCheck
   - split
   - vector
+  - bytestring
 
   #executables:
   #  boggle-exe:
