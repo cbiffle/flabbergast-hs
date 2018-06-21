@@ -24,15 +24,16 @@ data-files:
 library:
   source-dirs: src
   dependencies:
-  - containers
-  - deepseq
-  - QuickCheck
-  - split
-  - vector
   - bytestring
   - bytestring-trie
-  - unordered-containers
+  - containers
+  - criterion
+  - deepseq
   - hashable
+  - QuickCheck
+  - split
+  - unordered-containers
+  - vector
 
   #executables:
   #  boggle-exe:
@@ -60,8 +61,19 @@ tests:
     - split
 
 benchmarks:
-  boggle-bench:
+  best:
     source-dirs:  bench
+    main:         Main.hs
+    ghc-options:
+    - -O2
+    - -threaded
+    - -rtsopts
+    dependencies:
+    - boggle
+    - criterion
+    - deepseq
+  all:
+    source-dirs:  bench-all
     main:         Main.hs
     ghc-options:
     - -O2
