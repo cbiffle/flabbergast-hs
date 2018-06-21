@@ -17,6 +17,7 @@ import Control.Arrow ((&&&))
 import Data.List (sort, isSubsequenceOf)
 import Control.DeepSeq (NFData(..))
 import Base
+import Uniq
 
 import Traversal.SetPath
   (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
@@ -47,7 +48,8 @@ instance Solver T where
 
   solve d (CBoard b cs) =
     let d' = S.fromList $ [rw | (rw, sw) <- d, sw `isSubsequenceOf` cs]
-    in [r | pos <- positions b
+    in uniqBy fst $
+       [r | pos <- positions b
           , r <- search d' b (pos `extendPath` emptyPath)
                              [b !! snd pos !! fst pos]
                  ]

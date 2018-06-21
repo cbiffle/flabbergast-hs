@@ -65,6 +65,25 @@ newtype Boggle92 = Boggle92 RawBoard
 instance Arbitrary Boggle92 where
   arbitrary = Boggle92 <$> arbitraryBoard dice92 4 4
 
+newtype SizedBoggle92 = SizedBoggle92 RawBoard
+  deriving (Show)
+
+instance Arbitrary SizedBoggle92 where
+  arbitrary = do
+    s <- getSize
+    SizedBoggle92 <$> arbitraryBoard dice92 s s
+
+
+newtype FakeDict = FakeDict [String]
+  deriving (Show)
+
+instance Arbitrary FakeDict where
+  arbitrary = do
+    n <- getSize
+    fmap (FakeDict . map head . group . sort) $ resize 1000 $ listOf $ do
+      wl <- (+3) . getNonNegative <$> resize ((n ^ 2) - 3) arbitrary
+      take wl <$> shuffle (concat dice92)
+
 --------------------------------------------------------------------------------
 -- Rules checking
 
@@ -89,8 +108,15 @@ checkLegalWords d ws = case ws \\ d of
   [] -> pure ()
   illegal -> Left $ "Illegal words: " ++ intercalate " " illegal
 
+checkUnique :: [String] -> Either String ()
+checkUnique words =
+  case map head $ filter (\dupes -> length dupes > 1) $ group $ sort words of
+    [] -> pure ()
+    dupes -> Left $ "Duplicate plays: " ++ intercalate " " dupes
+
 checkPlay :: RawDictionary -> RawBoard -> [(String, Path)] -> Either String ()
 checkPlay d b results = do
   mapM_ (uncurry (checkWord b)) results
   mapM_ checkPath $ map snd results
+  checkUnique (map fst results)
   checkLegalWords d $ map fst results

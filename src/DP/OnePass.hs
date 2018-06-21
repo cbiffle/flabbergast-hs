@@ -2,12 +2,13 @@
 
 -- | Dynamic programming, redux.
 --
--- Rather than using dynamic programming to implement a cheap filter as in B6,
--- this uses it to generate actual paths.
+-- Rather than using dynamic programming to implement a cheap filter as in
+-- TwoPass, this uses it to generate actual paths, saving a pass.
 module DP.OnePass (T) where
 
 import Control.Arrow ((&&&))
 import Data.List (foldl')
+import Data.Maybe (listToMaybe, maybeToList)
 import qualified Data.Set as S
 import Base
 
@@ -29,9 +30,9 @@ cheap b (c : cs) = foldl' (cheap' b)
                                                 else S.empty) b)
                           cs
 
-search1 :: RawBoard -> String -> [(String, Path)]
-search1 b w = map (\p -> (w, reverse p)) $
-             S.toList $ S.unions $ concat $ cheap b w
+search1 :: RawBoard -> String -> Maybe (String, Path)
+search1 b w = fmap (\p -> (w, reverse p)) $
+              listToMaybe $ concatMap S.toList $ concat $ cheap b w
 
 data T
 
@@ -43,5 +44,5 @@ instance Solver T where
   cookBoard = id
 
   solve d b = [r | word <- d
-                 , r <- search1 b word
+                 , r <- maybeToList $ search1 b word
                  ]

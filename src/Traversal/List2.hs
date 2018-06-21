@@ -3,6 +3,7 @@ module Traversal.List2 (T) where
 
 import Data.List (nub)
 import Base
+import Uniq
 
 search :: RawDictionary -> RawBoard -> Path -> String -> [(String, Path)]
 search d b path word =
@@ -21,6 +22,7 @@ instance Solver T where
   type CookedBoard T = RawBoard
   cookDict = fmap reverse
   cookBoard = id
-  solve d b = [r | pos <- positions b
+  solve d b = uniqBy fst
+              [r | pos <- positions b
               , r <- search d b [pos] [b !! snd pos !! fst pos]
               ]

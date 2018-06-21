@@ -11,6 +11,7 @@ import qualified Data.Trie as T
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
 import Base
+import Uniq
 
 type Dictionary = T.Trie ()
 
@@ -22,7 +23,7 @@ search :: Dictionary -> RawBoard -> Path -> B.ByteString -> [(String, Path)]
 search d b path word
   | T.null d = []
   | otherwise =
-  (if word `T.member` d then ((BC.unpack word, path) :) else id)
+  (if word `T.member` d then ((BC.unpack word, reverse path) :) else id)
   [r | n <- nextSteps b (head path)
      , n `notElem` path
      , let bc = b !! snd n !! fst n
@@ -40,7 +41,8 @@ instance Solver T where
   type CookedBoard T = RawBoard
   cookBoard = id
 
-  solve d b = [r | pos <- positions b
+  solve d b = uniqBy fst $
+              [r | pos <- positions b
                  , r <- search d b [pos]
                                    (BC.singleton (b !! snd pos !! fst pos))
                  ]

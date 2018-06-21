@@ -6,6 +6,7 @@ module Traversal.SetPath
 
 import qualified Data.Set as S
 import Base
+import Uniq
 
 type Dictionary = S.Set String
 
@@ -39,7 +40,8 @@ instance Solver T where
   type CookedBoard T = RawBoard
   cookBoard = id
 
-  solve d b = [r | pos <- positions b
+  solve d b = uniqBy fst $
+              [r | pos <- positions b
                  , r <- search d b (pos `extendPath` emptyPath)
                                    [b !! snd pos !! fst pos]
                  ]

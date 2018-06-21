@@ -7,10 +7,14 @@
 -- if that succeeds. Because the fuzzy search is very cheap, we do it per word
 -- in the dictionary instead of per place on the board. Once we know a word is
 -- possible, we do the expensive search for all instances of it.
+--
+-- This method is after Golam Kawsar's work here:
+-- http://exceptional-code.blogspot.com/2012/02/solving-boggle-game-recursion-prefix.html
 module DP.TwoPass (T) where
 
 import Control.Arrow ((&&&))
 import Data.List (sort, isSubsequenceOf)
+import Data.Maybe (listToMaybe, maybeToList)
 import Control.DeepSeq (NFData(..))
 import Base
 
@@ -26,8 +30,9 @@ cheap' b last (c : cs) =
 cheap :: RawBoard -> [[Bool]] -> String -> Bool
 cheap b last w = or (map or (cheap' b last w))
 
-expensive :: RawBoard -> String -> [(String, Path)]
-expensive b target = [r | p <- positions b
+expensive :: RawBoard -> String -> Maybe (String, Path)
+expensive b target = listToMaybe $
+                     [r | p <- positions b
                         , b `tile` p == head target
                         , r <- search (tail target) [p]]
                         -- TODO
@@ -51,6 +56,6 @@ instance Solver T where
 
   solve d b = [r | word <- d
                  , cheap b trues word
-                 , r <- expensive b word
+                 , r <- maybeToList $ expensive b word
                  ]
     where trues = map (map (const True)) b

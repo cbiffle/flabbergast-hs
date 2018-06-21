@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies #-}
 
--- | Derived from B5 (set-based filtered dictionary) but using ByteString.
+-- | Derived from FilteredSetPath but using ByteString.
 -- The way we're using strings, ByteString is not an obvious win.
 module Traversal.FilteredByteStringSet (T) where
 
@@ -12,6 +12,7 @@ import Control.Arrow ((&&&), first)
 import Data.List (sort)
 import Control.DeepSeq (NFData(..))
 import Base
+import Uniq
 
 import Traversal.SetPath
   (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
@@ -57,7 +58,8 @@ instance Solver T where
 
   solve d (CBoard b cs) =
     let d' = S.fromList $ [rw | (rw, sw) <- d, sw `isSubsequenceOf` cs]
-    in [first BC.unpack r | pos <- positions b
+    in uniqBy fst $
+       [first BC.unpack r | pos <- positions b
                           , r <- search d' b (pos `extendPath` emptyPath)
                                        (BC.singleton (b !! snd pos !! fst pos))
                           ]

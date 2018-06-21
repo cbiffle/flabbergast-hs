@@ -9,11 +9,12 @@ import Control.Arrow ((&&&))
 import Data.List (sort, isSubsequenceOf, tails)
 import Control.DeepSeq (NFData(..))
 import Base
+import Uniq
 
 search :: S.Set String -> S.Set String -> RawBoard -> Path -> String
        -> [(String, Path)]
 search d pre b path word =
-  (if word `S.member` d then ((reverse word, path) :) else id)
+  (if word `S.member` d then ((reverse word, reverse path) :) else id)
   [r | n <- nextSteps b (head path)
      , n `notElem` path
      , let (p', w') = (n : path, (b !! snd n !! fst n) : word)
@@ -41,7 +42,8 @@ instance Solver T where
     let df = [e | e@(_, sw, _) <- d, sw `isSubsequenceOf` cs]
         d' = S.fromList $ [rw | (rw, _, _) <- df]
         pre = S.fromList $ [t | (_, _, ts) <- df, t <- ts]
-    in [r | pos <- positions b
+    in uniqBy fst $
+       [r | pos <- positions b
           , r <- search d' pre b [pos]
                                  [b !! snd pos !! fst pos]
                  ]
