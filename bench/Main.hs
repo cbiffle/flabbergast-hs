@@ -9,7 +9,7 @@ import Control.DeepSeq (force, NFData)
 import Paths_boggle
 import Base
 
-import qualified DP.OnePassSinglePathVec as DP
+import qualified DP.Filtered1PV as DP
 import qualified Traversal.FilteredTrie as Trie
 import qualified Traversal.FilteredPrefixSet as Set
 
@@ -18,8 +18,8 @@ loadFile name = do
   force . lines <$> readFile p
 
 boards = [{- ("2x2", ["MS","UO"])
-         ,-} ("3x3", ["TEI","EAA","ZJY"])
-         , ("4x4", ["INVS","TENE","APUU","GNDO"])
+         , ("3x3", ["TEI","EAA","ZJY"])
+         ,-} ("4x4", ["INVS","TENE","APUU","GNDO"])
          ]
 
 sbench :: forall s. (Solver s, NFData (CookedDict s), NFData (CookedBoard s))
