@@ -10,16 +10,13 @@ import Data.List (sort, isSubsequenceOf, tails)
 import Control.DeepSeq (NFData(..))
 import Base
 
-import Traversal.SetPath
-  (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
-
-search :: S.Set String -> S.Set String -> RawBoard -> SPath -> String
+search :: S.Set String -> S.Set String -> RawBoard -> Path -> String
        -> [(String, Path)]
 search d pre b path word =
-  (if word `S.member` d then ((reverse word, pathList path) :) else id)
-  [r | n <- nextSteps b (pathHead path)
-     , n `notInPath` path
-     , let (p', w') = (n `extendPath` path, (b !! snd n !! fst n) : word)
+  (if word `S.member` d then ((reverse word, path) :) else id)
+  [r | n <- nextSteps b (head path)
+     , n `notElem` path
+     , let (p', w') = (n : path, (b !! snd n !! fst n) : word)
      , w' `S.member` pre
      , r <- search d pre b p' w'
      ]
@@ -45,6 +42,6 @@ instance Solver T where
         d' = S.fromList $ [rw | (rw, _, _) <- df]
         pre = S.fromList $ [t | (_, _, ts) <- df, t <- ts]
     in [r | pos <- positions b
-          , r <- search d' pre b (pos `extendPath` emptyPath)
+          , r <- search d' pre b [pos]
                                  [b !! snd pos !! fst pos]
                  ]
