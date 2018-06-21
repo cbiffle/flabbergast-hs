@@ -42,13 +42,14 @@ mkGridOf b =
   in GO vec pos neigh
 
 cheap' :: GridOf Char -> GridOf (Maybe Path) -> Char -> GridOf (Maybe Path)
-cheap' g (GO paths _ _) c =
+cheap' g@(GO _ gp gn) (GO paths _ _) c =
   g `gfor` \i bc -> listToMaybe $
       [p : path | bc == c
-                , ni <- goNeighbors g V.! i
+                , ni <- gn V.! i
                 , path <- maybeToList $ paths V.! ni
-                , let p = goPositions g V.! i
-                , p `notElem` path]
+                , let p = gp V.! i
+                , p `notElem` path
+                ]
 
 cheap :: GridOf Char -> String -> GridOf (Maybe Path)
 cheap b (c : cs) = foldl' (cheap' b) seed cs
