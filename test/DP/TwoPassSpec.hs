@@ -7,4 +7,4 @@ import Checks
 import qualified DP.TwoPass
 
 spec :: Spec
-spec = genericSpec @DP.TwoPass.T 2
+spec = parallel $ genericSpec @DP.TwoPass.T 2

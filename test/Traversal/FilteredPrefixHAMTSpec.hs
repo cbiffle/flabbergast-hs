@@ -7,4 +7,4 @@ import Checks
 import qualified Traversal.FilteredPrefixHAMT
 
 spec :: Spec
-spec = genericSpec @Traversal.FilteredPrefixHAMT.T 2
+spec = parallel $ genericSpec @Traversal.FilteredPrefixHAMT.T 2

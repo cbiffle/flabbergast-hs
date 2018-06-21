@@ -7,4 +7,4 @@ import Checks
 import qualified DP.OnePass
 
 spec :: Spec
-spec = genericSpec @DP.OnePass.T 2
+spec = parallel $ genericSpec @DP.OnePass.T 2

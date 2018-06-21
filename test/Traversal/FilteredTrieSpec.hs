@@ -7,4 +7,4 @@ import Checks
 import qualified Traversal.FilteredTrie
 
 spec :: Spec
-spec = genericSpec @Traversal.FilteredTrie.T 2
+spec = parallel $ genericSpec @Traversal.FilteredTrie.T 2

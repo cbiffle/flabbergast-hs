@@ -7,4 +7,4 @@ import Checks
 import qualified DP.Filtered1PV
 
 spec :: Spec
-spec = genericSpec @DP.Filtered1PV.T 2
+spec = parallel $ genericSpec @DP.Filtered1PV.T 2

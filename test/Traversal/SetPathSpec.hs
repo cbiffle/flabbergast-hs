@@ -7,4 +7,4 @@ import Checks
 import qualified Traversal.SetPath
 
 spec :: Spec
-spec = genericSpec @Traversal.SetPath.T 2
+spec = parallel $ genericSpec @Traversal.SetPath.T 2

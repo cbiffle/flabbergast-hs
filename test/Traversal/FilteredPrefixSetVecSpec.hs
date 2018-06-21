@@ -7,4 +7,4 @@ import Checks
 import qualified Traversal.FilteredPrefixSetVec
 
 spec :: Spec
-spec = genericSpec @Traversal.FilteredPrefixSetVec.T 2
+spec = parallel $ genericSpec @Traversal.FilteredPrefixSetVec.T 2
