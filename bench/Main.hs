@@ -10,7 +10,7 @@ import Paths_boggle
 import Base
 
 import qualified DP.OnePassSinglePathVec as DP
-import qualified Traversal.Trie as Trie
+import qualified Traversal.FilteredTrie as Trie
 import qualified Traversal.FilteredPrefixSet as Set
 
 loadFile name = do
