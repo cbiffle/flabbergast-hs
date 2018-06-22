@@ -16,6 +16,7 @@ import qualified DP.OnePassSinglePath
 import qualified DP.OnePassSinglePathVec
 import qualified DP.TwoPass
 import qualified Traversal.FilteredByteStringSet
+import qualified Traversal.FilteredPrefixBSHAMT
 import qualified Traversal.FilteredPrefixHAMT
 import qualified Traversal.FilteredPrefixHAMTVec
 import qualified Traversal.FilteredPrefixSet
@@ -48,6 +49,7 @@ benches =
   , (Fast, comboBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
   , (Fast, comboBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
   , (Fast, comboBench @Traversal.FilteredPrefixHAMTVec.T "Traversal.FilteredPrefixHAMTVec")
+  , (Fast, comboBench @Traversal.FilteredPrefixBSHAMT.T "Traversal.FilteredPrefixBSHAMT")
 
   , (Fast, comboBench @DP.TwoPass.T "DP.TwoPass")
   , (Fast, comboBench @DP.OnePass.T "DP.OnePass")

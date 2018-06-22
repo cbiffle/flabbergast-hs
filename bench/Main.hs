@@ -12,7 +12,7 @@ import Bench
 
 import qualified DP.Filtered1PV as DP
 import qualified Traversal.FilteredTrie as Trie
-import qualified Traversal.FilteredPrefixHAMT as Set
+import qualified Traversal.FilteredPrefixBSHAMT as Set
 
 boards = [("4x4", board4x4)]
 
