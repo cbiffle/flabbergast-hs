@@ -14,52 +14,31 @@ import qualified Data.Vector as V
 import Control.Monad (join)
 import Base
 import ByteStringUtil
+import GridOf
 
-data GridOf a = GO
-  { goVec :: V.Vector a
-      -- ^ Vector of elements, row-major.
-  , goPositions :: !(V.Vector Pos)
-      -- ^ Mapping from element indices to positions, for generating paths.
-  , goNeighbors :: !(V.Vector [Int])
-      -- ^ Mapping from a vector index to the indices of its Cartesian
-      -- neighbors.
-  }
+type IPath = [Int]
 
-instance (NFData a) => NFData (GridOf a) where
-  rnf (GO v p n) = rnf (v,p,n)
-
-gfor (GO v p n) f = GO (V.imap f v) p n
-
-mkGridOf :: [[a]] -> GridOf a
-mkGridOf b =
-  let w = boardWidth b
-      pos2i (x, y) = x + y * w
-      vec = V.fromList $ concat b
-      pos = V.fromList $ positions b
-      neigh = fmap (map pos2i . nextSteps b) pos
-  in GO vec pos neigh
-
-cheap' :: GridOf Char -> GridOf (Maybe Path) -> Char -> GridOf (Maybe Path)
-cheap' g@(GO _ gp gn) (GO paths _ _) c =
-  g `gfor` \i bc -> listToMaybe $
-      [p : path | bc == c
+-- | Propagate possible paths by one step, for the next character 'c'.
+step :: GridOf Char -> GridOf (Maybe IPath) -> Char -> GridOf (Maybe IPath)
+step g@(GO _ _ gn) (GO paths _ _) c = g `gfor` \i bc -> listToMaybe $
+      [i : path | bc == c
                 , ni <- gn V.! i
                 , path <- maybeToList $ paths V.! ni
-                , let p = gp V.! i
-                , p `notElem` path
+                , i `notElem` path
                 ]
 
-cheap :: GridOf Char -> BS.ByteString -> GridOf (Maybe Path)
-cheap b cs = BS.foldl' (cheap' b) seed $ BS.tail cs
-  where
-    seed = b `gfor` \i bc -> if bc == BS.head cs
-                               then Just [goPositions b V.! i]
-                               else Nothing
-
+-- | Searches for instances of a single candidate word 'w' in 'b'. Returns one
+-- such instance if found.
 search1 :: GridOf Char -> BS.ByteString -> Maybe (String, Path)
 search1 b w =
-  fmap (\p -> (BS.unpack w, reverse p)) $
-  listToMaybe $ catMaybes $ V.toList $ goVec $ cheap b w
+  fmap (\p -> (BS.unpack w, map (goPositions b V.!) (reverse p))) $
+  listToMaybe $ catMaybes $ V.toList $ goVec $
+  BS.foldl' (step b) seed $
+  BS.tail w
+  where
+    seed = b `gfor` \i bc -> if bc == BS.head w
+                               then Just [i]
+                               else Nothing
 
 data T
 
@@ -72,6 +51,4 @@ instance Solver T where
                 
   solve d (b, cs) =
     let d' = [w | (w, s) <- d, s `isSubsequenceOf` cs]
-    in [r | word <- d'
-          , r <- maybeToList $ search1 b word
-          ]
+    in [r | word <- d', r <- maybeToList $ search1 b word]

@@ -2,7 +2,9 @@
 
 -- | Dynamic programming, redux^4.
 --
--- Filter the dictionary to the board.
+-- Uses the one-pass single-path algorithm, but filters the dictionary to the
+-- board. Since the scaling of the runtime is dominated by the length of the
+-- dictionary, this cuts runtime significantly (~75%).
 module DP.Filtered1PV (T) where
 
 import Control.Arrow ((&&&))
@@ -12,64 +14,45 @@ import Data.Maybe (listToMaybe, maybeToList, catMaybes)
 import qualified Data.Vector as V
 import Control.Monad (join)
 import Base
+import GridOf
 
-data GridOf a = GO
-  { goVec :: V.Vector a
-      -- ^ Vector of elements, row-major.
-  , goPositions :: !(V.Vector Pos)
-      -- ^ Mapping from element indices to positions, for generating paths.
-  , goNeighbors :: !(V.Vector [Int])
-      -- ^ Mapping from a vector index to the indices of its Cartesian
-      -- neighbors.
-  }
+type IPath = [Int]
 
-instance (NFData a) => NFData (GridOf a) where
-  rnf (GO v p n) = rnf (v,p,n)
+-- | One step of the search, phrased as a fold. Given a grid of valid paths for
+-- a word prefix, tries to extend those paths to include a neighboring instance
+-- of character 'c', or discard them if they cannot be extended.
+--
+-- If duplicate paths reach a tile, their futures are identical, so we
+-- arbitrarily choose one to survive and discard the rest without loss of
+-- generality. (This is implicit in the use of 'listToMaybe'.)
+step :: GridOf Char -> GridOf (Maybe IPath) -> Char -> GridOf (Maybe IPath)
+step b paths c = b `gfor` \i bc ->
+  listToMaybe $
+  [i : path | bc == c
+            , ni <- goNeighbors b V.! i
+            , path <- maybeToList $ goVec paths V.! ni
+            , i `notElem` path]
 
-gfor (GO v p n) f = GO (V.imap f v) p n
-
-mkGridOf :: [[a]] -> GridOf a
-mkGridOf b =
-  let w = boardWidth b
-      pos2i (x, y) = x + y * w
-      vec = V.fromList $ concat b
-      pos = V.fromList $ positions b
-      neigh = fmap (map pos2i . nextSteps b) pos
-  in GO vec pos neigh
-
-cheap' :: GridOf Char -> GridOf (Maybe Path) -> Char -> GridOf (Maybe Path)
-cheap' g@(GO _ gp gn) (GO paths _ _) c =
-  g `gfor` \i bc -> listToMaybe $
-      [p : path | bc == c
-                , ni <- gn V.! i
-                , path <- maybeToList $ paths V.! ni
-                , let p = gp V.! i
-                , p `notElem` path
-                ]
-
-cheap :: GridOf Char -> String -> GridOf (Maybe Path)
-cheap b (c : cs) = foldl' (cheap' b) seed cs
-  where
-    seed = b `gfor` \i bc -> if bc == c
-                               then Just [goPositions b V.! i]
-                               else Nothing
-
+-- | Searches 'b' for an instance of 'w', returning one if found.
 search1 :: GridOf Char -> String -> Maybe (String, Path)
-search1 b w =
-  fmap (\p -> (w, reverse p)) $
-  listToMaybe $ catMaybes $ V.toList $ goVec $ cheap b w
+search1 b w = fmap (\p -> (w, map (goPositions b V.!) $ reverse p)) $
+              listToMaybe $ catMaybes $ V.toList $ goVec $
+              foldl' (step b) seed (tail w)
+  where
+    seed = b `gfor` \i bc -> if bc == head w then Just [i] else Nothing
 
 data T
 
 instance Solver T where
+  -- Sort the characters in each dictionary word, so we can do cheap
+  -- subsequence tests.
   type CookedDict T = [(String, String)]
   cookDict = fmap (id &&& sort)
 
+  -- Sort the characters in the board so we can do cheap subsequence tests.
   type CookedBoard T = (GridOf Char, [Char])
   cookBoard = mkGridOf &&& (sort . concat)
                 
   solve d (b, cs) =
     let d' = [w | (w, s) <- d, s `isSubsequenceOf` cs]
-    in [r | word <- d'
-          , r <- maybeToList $ search1 b word
-          ]
+    in [r | word <- d', r <- maybeToList $ search1 b word]

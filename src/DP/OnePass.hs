@@ -2,8 +2,10 @@
 
 -- | Dynamic programming, redux.
 --
--- Rather than using dynamic programming to implement a cheap filter as in
--- TwoPass, this uses it to generate actual paths, saving a pass.
+-- Instead of a fuzzy DP solution followed by an exact DFS, this is an exact
+-- DP solution. In each step, it propagates all valid paths through a given
+-- tile for a given word. By maintaining the path information it can detect,
+-- and reject, self-intersecting paths.
 module DP.OnePass (T) where
 
 import Control.Arrow ((&&&))
@@ -14,25 +16,25 @@ import Base
 
 type GridOf a = [[a]]
 
-cheap' :: GridOf Char -> GridOf (S.Set Path) -> Char -> GridOf (S.Set Path)
-cheap' b paths c =
-  mapWithPos (\p bc -> S.fromList $
-                       [p : path | bc == c
-                                 , np <- nextSteps b p
-                                 , path <- S.toList $ paths `tile` np
-                                 , p `notElem` path]) b
+-- | Propagates potential paths, given a grid of known paths and the next
+-- character in the word.
+step :: GridOf Char -> GridOf (S.Set Path) -> Char -> GridOf (S.Set Path)
+step b paths c = flip mapWithPos b $
+    \p bc -> S.fromList $ [p : path | bc == c
+                                    , np <- nextSteps b p
+                                    , path <- S.toList $ paths `tile` np
+                                    , p `notElem` path]
 
-cheap :: RawBoard -> String -> GridOf (S.Set Path)
-cheap b (c : cs) = foldl' (cheap' b)
-                          (mapWithPos
-                                (\pos bc -> if bc == c
-                                                then S.singleton [pos]
-                                                else S.empty) b)
-                          cs
-
+-- | Searches for instances of a single candidate word 'w' in 'b'. Returns one
+-- such instance if found.
 search1 :: RawBoard -> String -> Maybe (String, Path)
-search1 b w = fmap (\p -> (w, reverse p)) $
-              listToMaybe $ concatMap S.toList $ concat $ cheap b w
+search1 b w@(c : cs) =
+  fmap (\p -> (w, reverse p)) $
+  listToMaybe $ concatMap S.toList $ concat $
+  foldl' (step b) seed cs
+  where seed = flip mapWithPos b $ \pos bc -> if bc == c
+                                                then S.singleton [pos]
+                                                else S.empty
 
 data T
 

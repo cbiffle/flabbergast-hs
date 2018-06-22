@@ -12,25 +12,30 @@ import Base
 
 type GridOf a = [[a]]
 
-cheap' :: GridOf Char -> GridOf (Maybe Path) -> Char -> GridOf (Maybe Path)
-cheap' b paths c =
-  mapWithPos (\p bc -> listToMaybe $
-                       [p : path | bc == c
-                                 , np <- nextSteps b p
-                                 , path <- maybeToList $ paths `tile` np
-                                 , p `notElem` path]) b
+-- | One step of the search, phrased as a fold. Given a grid of valid paths for
+-- a word prefix, tries to extend those paths to include a neighboring instance
+-- of character 'c', or discard them if they cannot be extended.
+--
+-- If duplicate paths reach a tile, their futures are identical, so we
+-- arbitrarily choose one to survive and discard the rest without loss of
+-- generality. (This is implicit in the use of 'listToMaybe'.)
+step :: GridOf Char -> GridOf (Maybe Path) -> Char -> GridOf (Maybe Path)
+step b paths c = flip mapWithPos b $ \p bc ->
+  listToMaybe $
+  [p : path | bc == c
+            , np <- nextSteps b p
+            , path <- maybeToList $ paths `tile` np
+            , p `notElem` path]
 
-cheap :: RawBoard -> String -> GridOf (Maybe Path)
-cheap b (c : cs) = foldl' (cheap' b)
-                          (mapWithPos
-                                (\pos bc -> if bc == c
-                                                then Just [pos]
-                                                else Nothing) b)
-                          cs
-
+-- | Searches 'b' for an instance of 'w', returning one if found.
 search1 :: RawBoard -> String -> Maybe (String, Path)
 search1 b w = fmap (\p -> (w, reverse p)) $
-             listToMaybe $ catMaybes $ concat $ cheap b w
+              listToMaybe $ catMaybes $ concat $
+              foldl' (step b) seed (tail w)
+  where
+    seed = flip mapWithPos b $ \pos bc -> if bc == head w
+                                            then Just [pos]
+                                            else Nothing
 
 data T
 
@@ -41,6 +46,4 @@ instance Solver T where
   type CookedBoard T = RawBoard
   cookBoard = id
 
-  solve d b = [r | word <- d
-                 , r <- maybeToList $ search1 b word
-                 ]
+  solve d b = [r | word <- d, r <- maybeToList $ search1 b word]
