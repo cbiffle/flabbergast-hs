@@ -36,15 +36,25 @@ solveBench d b =
   in bench "solve-only" $ nf (uncurry (solve @s)) (preD, preB)
 
 -- | Benchmark that applies the solver repeatedly to a given dictionary and
+-- board, cooking the dictionary in advance and the board each time.
+--
+-- This simulates the effect of algorithm-specific dictionary preprocessing.
+preBench :: forall s. (Solver s, NFData (CookedDict s), NFData (CookedBoard s))
+         => RawDictionary -> RawBoard -> Benchmark
+preBench d b = let preD :: CookedDict s = cookDict @s d
+      in bench "precook-dict" $ nf (solve @s preD . cookBoard @s) b
+
+-- | Benchmark that applies the solver repeatedly to a given dictionary and
 -- board, cooking each every time.
 cookBench :: forall s. (Solver s, NFData (CookedDict s), NFData (CookedBoard s))
           => RawDictionary -> RawBoard -> Benchmark
-cookBench d b = bench "cook-and-solve" $ nf (uncurry (cookAndSolve @s)) (d, b)
+cookBench d b = bench "cook-all" $ nf (uncurry (cookAndSolve @s)) (d, b)
 
 comboBench :: forall s.
               (Solver s, NFData (CookedDict s), NFData (CookedBoard s))
            => String -> RawDictionary -> RawBoard -> Benchmark
 comboBench name d b = bgroup name
     [ solveBench @s d b
+    , preBench @s d b
     , cookBench @s d b
     ]
