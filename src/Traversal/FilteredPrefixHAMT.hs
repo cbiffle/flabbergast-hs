@@ -34,17 +34,17 @@ instance NFData CBoard where
 data T
 
 instance Solver T where
-  type CookedDict T = [(String, String, [String])]
-                          -- reversed, sorted, reversed prefixes
-  cookDict = fmap (\w -> let r = reverse w in (r, sort w, tails r))
+  type CookedDict T = [(String, String)]
+                          -- reversed, sorted
+  cookDict = fmap (reverse &&& sort)
 
   type CookedBoard T = CBoard
   cookBoard b = CBoard b $ sort $ concat b
 
   solve d (CBoard b cs) =
-    let df = [e | e@(_, sw, _) <- d, sw `isSubsequenceOf` cs]
-        d' = H.fromList $ [rw | (rw, _, _) <- df]
-        pre = H.fromList $ [t | (_, _, ts) <- df, t <- ts]
+    let df = [e | e@(_, sw) <- d, sw `isSubsequenceOf` cs]
+        d' = H.fromList $ [rw | (rw, _) <- df]
+        pre = H.fromList $ [t | (rw, _) <- df, t <- tails $ tail rw]
     in uniqBy fst $
        [r | pos <- positions b
           , r <- search d' pre b [pos]
