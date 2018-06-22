@@ -10,20 +10,9 @@ import qualified Data.ByteString.Char8 as BC
 import Data.List (group, sort)
 import Base
 import Uniq
+import ByteStringUtil
 
 type Dictionary = T.Trie ()
-
-isSubsequenceOf :: BC.ByteString -> BC.ByteString -> Bool
-isSubsequenceOf as bs
-  | B.null as = True
-  | B.null bs = False
-  | otherwise =
-      let Just (a, as') = B.uncons as
-          Just (b, bs') = B.uncons bs
-      in case a `compare` b of
-          EQ -> as' `isSubsequenceOf` bs'
-          GT -> as `isSubsequenceOf` bs'
-          LT -> False
 
 search :: Dictionary -> RawBoard -> Path -> B.ByteString -> [(String, Path)]
 search d b path word

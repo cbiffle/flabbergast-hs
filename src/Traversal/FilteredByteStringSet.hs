@@ -13,21 +13,10 @@ import Data.List (sort)
 import Control.DeepSeq (NFData(..))
 import Base
 import Uniq
+import ByteStringUtil
 
 import Traversal.SetPath
   (SPath, emptyPath, extendPath, notInPath, pathList, pathHead)
-
-isSubsequenceOf :: ByteString -> ByteString -> Bool
-isSubsequenceOf as bs
-  | B.null as = True
-  | B.null bs = False
-  | otherwise =
-      let Just (a, as') = B.uncons as
-          Just (b, bs') = B.uncons bs
-      in case a `compare` b of
-          EQ -> as' `isSubsequenceOf` bs'
-          GT -> as `isSubsequenceOf` bs'
-          LT -> False
 
 type BDict = S.Set ByteString
 
