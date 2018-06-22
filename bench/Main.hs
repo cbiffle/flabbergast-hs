@@ -10,7 +10,7 @@ import Paths_boggle
 import Base
 import Bench
 
-import qualified DP.Filtered1PV as DP
+import qualified DP.Filtered1PVBS as DP
 import qualified Traversal.FilteredTrie as Trie
 import qualified Traversal.FilteredPrefixBSHAMT as Set
 

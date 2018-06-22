@@ -11,6 +11,7 @@ import Base
 import Bench
 
 import qualified DP.Filtered1PV
+import qualified DP.Filtered1PVBS
 import qualified DP.OnePass
 import qualified DP.OnePassSinglePath
 import qualified DP.OnePassSinglePathVec
@@ -56,6 +57,7 @@ benches =
   , (Fast, comboBench @DP.OnePassSinglePath.T "DP.OnePassSinglePath")
   , (Fast, comboBench @DP.OnePassSinglePathVec.T "DP.OnePassSinglePathVec")
   , (Fast, comboBench @DP.Filtered1PV.T "DP.Filtered1PV")
+  , (Fast, comboBench @DP.Filtered1PVBS.T "DP.Filtered1PVBS")
   ]
 
 main = do
