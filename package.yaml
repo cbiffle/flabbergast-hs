@@ -62,6 +62,16 @@ tests:
     - hspec
     - QuickCheck
     - split
+  boggle-weigh:
+    main:                Main.hs
+    source-dirs:         weigh
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    dependencies:
+    - boggle
+    - weigh
+    - deepseq
 
 benchmarks:
   best:
