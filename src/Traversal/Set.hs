@@ -21,13 +21,15 @@ search d b path word =
 data T
 
 instance Solver T where
-  type CookedDict T = Dictionary
-  cookDict = S.fromList
+  type CookedDict T = RawDictionary
+  cookDict = id
 
   type CookedBoard T = RawBoard
   cookBoard = id
 
-  solve d b = uniqBy fst $
-              [r | pos <- indices b
-                 , r <- search d b [pos] (BS.singleton (b `at` pos))
-                 ]
+  solve d b =
+    let set = S.fromList d
+    in uniqBy fst $
+       [r | pos <- indices b
+          , r <- search set b [pos] (BS.singleton (b `at` pos))
+          ]

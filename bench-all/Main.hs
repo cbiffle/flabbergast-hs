@@ -23,26 +23,29 @@ import qualified Traversal.List
 import qualified Traversal.Set
 import qualified Traversal.Trie
 
-boards = [ (Slow, mkGridOf ["AW", "OP"])
-         , (Fast, board4x4)
+data SizeClass = Size2 | Size3 | Size4 deriving (Eq, Show)
+
+boards = [ (Size2, mkGridOf ["AW", "OP"])
+         , (Size3, mkGridOf ["OCN", "ENN", "VNA"])
+         , (Size4, board4x4)
          ]
 
-data Speed = Slow | Fast deriving (Eq, Show)
 
 benches =
-  [ (Slow, comboBench @Traversal.List.T "Traversal.List")
---  , (Fast, comboBench @Traversal.Set.T "Traversal.Set")
+  [ (Size2, comboBench @Traversal.List.T "Traversal.List")
 
-  , (Fast, comboBench @Traversal.FilteredSet.T "Traversal.FilteredSet")
-  , (Fast, comboBench @Traversal.FilteredPrefixSet.T "Traversal.FilteredPrefixSet")
-  , (Fast, comboBench @Traversal.Trie.T "Traversal.Trie")
-  , (Fast, comboBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
-  , (Fast, comboBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
+  , (Size3, comboBench @Traversal.Set.T "Traversal.Set")
+  , (Size3, comboBench @Traversal.FilteredSet.T "Traversal.FilteredSet")
 
-  , (Fast, comboBench @DP.TwoPass.T "DP.TwoPass")
-  , (Fast, comboBench @DP.OnePass.T "DP.OnePass")
-  , (Fast, comboBench @DP.OnePassSinglePath.T "DP.OnePassSinglePath")
-  , (Fast, comboBench @DP.Filtered1PV.T "DP.Filtered1PV")
+  , (Size4, comboBench @Traversal.FilteredPrefixSet.T "Traversal.FilteredPrefixSet")
+  , (Size4, comboBench @Traversal.Trie.T "Traversal.Trie")
+  , (Size4, comboBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
+  , (Size4, comboBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
+
+  , (Size4, comboBench @DP.TwoPass.T "DP.TwoPass")
+  , (Size4, comboBench @DP.OnePass.T "DP.OnePass")
+  , (Size4, comboBench @DP.OnePassSinglePath.T "DP.OnePassSinglePath")
+  , (Size4, comboBench @DP.Filtered1PV.T "DP.Filtered1PV")
   ]
 
 main = do

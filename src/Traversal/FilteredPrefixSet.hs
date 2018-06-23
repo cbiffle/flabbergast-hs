@@ -27,17 +27,17 @@ search d pre b path word =
 data T
 
 instance Solver T where
-  type CookedDict T = [(BS.ByteString, BS.ByteString, [BS.ByteString])]
-                          -- identity, sorted, prefixes
-  cookDict = fmap (\w -> (w, BS.sort w, BS.inits w))
+  type CookedDict T = [(BS.ByteString, BS.ByteString)]
+                          -- identity, sorted
+  cookDict = fmap (\w -> (w, BS.sort w))
 
   type CookedBoard T = (RawBoard, BS.ByteString)
   cookBoard = (id &&& (BS.pack . sort . ungrid))
 
   solve d (b, cs) =
-    let df = [e | e@(_, sw, _) <- d, sw `isSubsequenceOf` cs]
-        d' = S.fromList $ [rw | (rw, _, _) <- df]
-        pre = S.fromList $ [t | (_, _, ts) <- df, t <- ts]
+    let df = [w | (w, sw) <- d, sw `isSubsequenceOf` cs]
+        d' = S.fromList df
+        pre = S.fromList $ [t | w <- df, t <- BS.inits w]
     in uniqBy fst $
        [r | pos <- indices b
           , r <- search d' pre b [pos]

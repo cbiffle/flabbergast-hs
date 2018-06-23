@@ -35,14 +35,15 @@ search d b path word
 data T
 
 instance Solver T where
-  type CookedDict T = Dictionary
-  cookDict = T.fromList . fmap (\s -> (s, ()))
+  type CookedDict T = RawDictionary
+  cookDict = id
 
   type CookedBoard T = RawBoard
   cookBoard = id
 
-  solve d b = uniqBy fst $
-              [r | i <- indices b
-                 , r <- search d b [i]
-                                   (BC.singleton (b `at` i))
-                 ]
+  solve d b =
+    let trie = T.fromList $ fmap (\s -> (s, ())) d
+    in uniqBy fst $
+       [r | i <- indices b
+          , r <- search trie b [i] (BC.singleton (b `at` i))
+          ]
