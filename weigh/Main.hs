@@ -15,6 +15,9 @@ import qualified DP.OnePass
 import qualified DP.OnePassSinglePath
 import qualified DP.Filtered1PV
 import qualified Traversal.Trie
+import qualified Traversal.Set
+import qualified Traversal.FilteredSet
+import qualified Traversal.FilteredHAMT
 import qualified Traversal.FilteredTrie
 import qualified Traversal.FilteredPrefixHAMT
 import qualified Traversal.FilteredPrefixSet
@@ -34,6 +37,9 @@ main = do
     sfunc @DP.OnePassSinglePath.T d
     sfunc @DP.Filtered1PV.T d
     sfunc @Traversal.Trie.T d
+    sfunc @Traversal.Set.T d
+    sfunc @Traversal.FilteredSet.T d
+    sfunc @Traversal.FilteredHAMT.T d
     sfunc @Traversal.FilteredTrie.T d
     sfunc @Traversal.FilteredPrefixHAMT.T d
     sfunc @Traversal.FilteredPrefixSet.T d
