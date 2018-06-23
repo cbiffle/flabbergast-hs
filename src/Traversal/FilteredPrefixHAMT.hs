@@ -32,10 +32,6 @@ data T
 prefixPattern = (True, False) : repeat (False, True)
 
 instance Solver T where
-  type CookedDict T = [(BS.ByteString, BS.ByteString)]
-                          -- normal, sorted
-  cookDict = fmap (id &&& BS.sort)
-
   type CookedBoard T = (RawBoard, BS.ByteString)
   cookBoard b = (b, BS.pack $ sort $ ungrid b)
 

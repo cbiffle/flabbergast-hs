@@ -5,6 +5,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 module Base where
 
+import Control.Arrow ((&&&))
 import Control.DeepSeq (NFData(..))
 import Control.Monad (replicateM, forM_)
 import Test.QuickCheck
@@ -17,7 +18,7 @@ type Pos = (Int, Int)
 type Path = [Pos]
 type IPath = [Int]
 
-type RawDictionary = [BS.ByteString]
+type RawDictionary = [(BS.ByteString, BS.ByteString)]
 
 type Results = [(BS.ByteString, Path)]
 
@@ -66,15 +67,13 @@ ipath g = map (goPositions g V.!)
 type RawBoard = GridOf Char
 
 class Solver s where
-  type CookedDict s
   type CookedBoard s
-  cookDict :: RawDictionary -> CookedDict s
   cookBoard :: RawBoard -> CookedBoard s
-  solve :: CookedDict s -> CookedBoard s -> Results
+  solve :: RawDictionary -> CookedBoard s -> Results
 
 cookAndSolve :: forall s. (Solver s)
              => RawDictionary -> RawBoard -> Results
-cookAndSolve d b = solve @s (cookDict @s d) (cookBoard @s b)
+cookAndSolve d b = solve @s d (cookBoard @s b)
 
 boardWidth, boardHeight :: RawBoard -> Int
 boardWidth = goWidth
@@ -129,7 +128,7 @@ newtype FakeDict = FakeDict RawDictionary
 instance Arbitrary FakeDict where
   arbitrary = do
     n <- getSize
-    fmap (FakeDict . map (BS.pack . head) . group . sort) $
+    fmap (FakeDict . map ((BS.pack &&& BS.pack . sort) . head) . group . sort) $
       resize 1000 $ listOf $ do
         wl <- (+3) . getNonNegative <$> resize ((n ^ 2) - 3) arbitrary
         take wl <$> shuffle (concat dice92)
@@ -154,7 +153,7 @@ checkPath ps = forM_ (group $ sort ps) $ \pgroup ->
                              , show (length pgroup), " times in path"]
 
 checkLegalWords :: RawDictionary -> [BS.ByteString] -> Either String ()
-checkLegalWords d ws = case ws \\ d of
+checkLegalWords d ws = case ws \\ map fst d of
   [] -> pure ()
   illegal -> Left $ "Illegal words: " ++ intercalate " " (map BS.unpack illegal)
 

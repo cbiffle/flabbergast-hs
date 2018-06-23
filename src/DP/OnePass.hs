@@ -38,12 +38,9 @@ search1 b w =
 data T
 
 instance Solver T where
-  type CookedDict T = RawDictionary
-  cookDict = id
-
   type CookedBoard T = RawBoard
   cookBoard = id
 
-  solve d b = [r | word <- d
+  solve d b = [r | (word, _) <- d
                  , r <- maybeToList $ search1 b word
                  ]

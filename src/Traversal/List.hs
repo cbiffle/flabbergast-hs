@@ -31,12 +31,9 @@ possibleSolutions b = [r | p <- indices b
 data T
 
 instance Solver T where
-  type CookedDict T = RawDictionary
-  cookDict = id
-
   type CookedBoard T = RawBoard
   cookBoard = id
 
   solve d b = uniqBy fst $  -- because this *will* generate duplicate solutions
-              filter ((`elem` d) . fst) $  -- reject illegal words
+              filter ((`elem` map fst d) . fst) $  -- reject illegal words
               possibleSolutions b

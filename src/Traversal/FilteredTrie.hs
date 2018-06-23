@@ -30,9 +30,6 @@ search d b path word
 data T
 
 instance Solver T where
-  type CookedDict T = [(BC.ByteString, BC.ByteString)] -- packed, sorted
-  cookDict = fmap (id &&& BC.sort)
-
   type CookedBoard T = (RawBoard, BC.ByteString)
   cookBoard b = (b, BC.pack $ sort $ ungrid b)
 

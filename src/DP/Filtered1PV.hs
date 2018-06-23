@@ -43,11 +43,6 @@ search1 b w = fmap (\p -> (w, map (goPositions b V.!) $ reverse p)) $
 data T
 
 instance Solver T where
-  -- Sort the characters in each dictionary word, so we can do cheap
-  -- subsequence tests.
-  type CookedDict T = [(BS.ByteString, BS.ByteString)]
-  cookDict = fmap (id &&& BS.sort)
-
   -- Sort the characters in the board so we can do cheap subsequence tests.
   type CookedBoard T = (GridOf Char, BS.ByteString)
   cookBoard = id &&& (BS.pack . sort . ungrid)

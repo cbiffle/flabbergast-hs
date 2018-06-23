@@ -8,11 +8,15 @@ module Checks (genericSpec) where
 import Test.Hspec
 import Test.Hspec.QuickCheck
 import Test.QuickCheck
+import Control.Arrow ((&&&))
 import Control.Monad
 import Data.List.Split
 import qualified Data.ByteString.Char8 as BS
 
 import Base
+
+mkDict :: [BS.ByteString] -> RawDictionary
+mkDict = fmap (id &&& BS.sort)
 
 genericSpec :: forall s. (Solver s) => Int -> Spec
 genericSpec n = do
@@ -34,7 +38,7 @@ genericSpec n = do
           -- derived by boardf.
           case_ boardf path = do
               let board = mkGridOf $ boardf word
-                  dict = [word]
+                  dict = mkDict [word]
               let play = solver dict board
               checkPlay dict board play `shouldBe` Right ()
               play `shouldBe` [(word, path)]
@@ -59,12 +63,12 @@ genericSpec n = do
                            ]
           path = [(0,0), (1,0), (1,1), (0,2)]
       it "finds forward" $
-        solver [word] board `shouldBe` [(word, path)]
+        solver (mkDict [word]) board `shouldBe` [(word, path)]
       it "finds backwards" $
-        solver [BS.reverse word] board
+        solver (mkDict [BS.reverse word]) board
           `shouldBe` [(BS.reverse word, reverse path)]
       it "finds both" $
-        solver [word, BS.reverse word] board
+        solver (mkDict [word, BS.reverse word]) board
           `shouldBe` [(word, path), (BS.reverse word, reverse path)]
 
   context "rules" $ modifyMaxSuccess (const 25) $ do
