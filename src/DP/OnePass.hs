@@ -12,29 +12,28 @@ import Control.Arrow ((&&&))
 import Data.List (foldl')
 import Data.Maybe (listToMaybe, maybeToList)
 import qualified Data.Set as S
+import qualified Data.ByteString.Char8 as BS
 import Base
-
-type GridOf a = [[a]]
 
 -- | Propagates potential paths, given a grid of known paths and the next
 -- character in the word.
-step :: GridOf Char -> GridOf (S.Set Path) -> Char -> GridOf (S.Set Path)
-step b paths c = flip mapWithPos b $
-    \p bc -> S.fromList $ [p : path | bc == c
-                                    , np <- nextSteps b p
-                                    , path <- S.toList $ paths `tile` np
-                                    , p `notElem` path]
+step :: RawBoard -> GridOf (S.Set IPath) -> Char -> GridOf (S.Set IPath)
+step b paths c = b `gfor` \i bc ->
+  S.fromList $ [i : path | bc == c
+                         , ni <- neighborIndices b i
+                         , path <- S.toList $ paths `at` ni
+                         , i `notElem` path]
 
 -- | Searches for instances of a single candidate word 'w' in 'b'. Returns one
 -- such instance if found.
-search1 :: RawBoard -> String -> Maybe (String, Path)
-search1 b w@(c : cs) =
-  fmap (\p -> (w, reverse p)) $
-  listToMaybe $ concatMap S.toList $ concat $
-  foldl' (step b) seed cs
-  where seed = flip mapWithPos b $ \pos bc -> if bc == c
-                                                then S.singleton [pos]
-                                                else S.empty
+search1 :: RawBoard -> BS.ByteString -> Maybe (BS.ByteString, Path)
+search1 b w =
+  fmap (\p -> (w, ipath b $ reverse p)) $
+  listToMaybe $ concatMap S.toList $ ungrid $
+  BS.foldl' (step b) seed (BS.tail w)
+  where seed = b `gfor` \i bc -> if bc == BS.head w
+                                   then S.singleton [i]
+                                   else S.empty
 
 data T
 

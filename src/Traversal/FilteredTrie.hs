@@ -14,14 +14,14 @@ import ByteStringUtil
 
 type Dictionary = T.Trie ()
 
-search :: Dictionary -> RawBoard -> Path -> B.ByteString -> [(String, Path)]
+search :: Dictionary -> RawBoard -> IPath -> B.ByteString -> Results
 search d b path word
   | T.null d = []
   | otherwise =
-    (if word `T.member` d then ((BC.unpack word, reverse path) :) else id)
-    [r | n <- nextSteps b (head path)
+    (if word `T.member` d then ((word, ipath b $ reverse path) :) else id)
+    [r | n <- neighborIndices b (head path)
        , n `notElem` path
-       , let bc = b !! snd n !! fst n
+       , let bc = b `at` n
        , let p' = n : path
        , let w' = word `BC.snoc` bc
        , r <- search (w' `T.submap` d) b p' w'
@@ -31,15 +31,15 @@ data T
 
 instance Solver T where
   type CookedDict T = [(BC.ByteString, BC.ByteString)] -- packed, sorted
-  cookDict = fmap (BC.pack &&& (BC.pack . sort))
+  cookDict = fmap (id &&& BC.sort)
 
   type CookedBoard T = (RawBoard, BC.ByteString)
-  cookBoard b = (b, BC.pack $ sort $ concat b)
+  cookBoard b = (b, BC.pack $ sort $ ungrid b)
 
   solve d (b, cs) = 
     let d' = T.fromList $ [(w, ()) | (w, sw) <- d, sw `isSubsequenceOf` cs]
     in uniqBy fst $
-       [r | pos <- positions b
+       [r | pos <- indices b
           , r <- search d' b [pos]
-                            (BC.singleton (b !! snd pos !! fst pos))
+                            (BC.singleton (b `at` pos))
                  ]

@@ -11,20 +11,21 @@
 module Traversal.List (T) where
 
 import Base
+import qualified Data.ByteString.Char8 as BS
 import Uniq
 
 -- | Yield all possible solutions of a board as a lazy list of "words" and
 -- paths. Solutions will be legal per the rules but may not exist in the
 -- dictionary.
-possibleSolutions :: RawBoard -> [(String, Path)]
-possibleSolutions b = [r | p <- positions b
-                         , r <- dfs [p] [b !! snd p !! fst p]]
+possibleSolutions :: RawBoard -> Results
+possibleSolutions b = [r | p <- indices b
+                         , r <- dfs [p] $ BS.singleton $ b `at` p]
   where
-    dfs path word = (word, path) :
-                    [r | n <- nextSteps b (last path)
+    dfs path word = (word, ipath b $ path) :
+                    [r | n <- neighborIndices b (last path)
                        , n `notElem` path
-                       , let bc = b !! snd n !! fst n
-                       , r <- dfs (path ++ [n]) (word ++ [bc])
+                       , let bc = b `at` n
+                       , r <- dfs (path ++ [n]) (word `BS.snoc` bc)
                        ]
 
 data T

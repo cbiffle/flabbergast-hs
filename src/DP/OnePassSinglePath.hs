@@ -8,9 +8,8 @@ module DP.OnePassSinglePath (T) where
 
 import Data.List (foldl')
 import Data.Maybe (listToMaybe, maybeToList, catMaybes)
+import qualified Data.ByteString.Char8 as BS
 import Base
-
-type GridOf a = [[a]]
 
 -- | One step of the search, phrased as a fold. Given a grid of valid paths for
 -- a word prefix, tries to extend those paths to include a neighboring instance
@@ -19,23 +18,21 @@ type GridOf a = [[a]]
 -- If duplicate paths reach a tile, their futures are identical, so we
 -- arbitrarily choose one to survive and discard the rest without loss of
 -- generality. (This is implicit in the use of 'listToMaybe'.)
-step :: GridOf Char -> GridOf (Maybe Path) -> Char -> GridOf (Maybe Path)
-step b paths c = flip mapWithPos b $ \p bc ->
+step :: GridOf Char -> GridOf (Maybe IPath) -> Char -> GridOf (Maybe IPath)
+step b paths c = b `gfor` \i bc ->
   listToMaybe $
-  [p : path | bc == c
-            , np <- nextSteps b p
-            , path <- maybeToList $ paths `tile` np
-            , p `notElem` path]
+  [i : path | bc == c
+            , ni <- neighborIndices b i
+            , path <- maybeToList $ paths `at` ni
+            , i `notElem` path]
 
 -- | Searches 'b' for an instance of 'w', returning one if found.
-search1 :: RawBoard -> String -> Maybe (String, Path)
-search1 b w = fmap (\p -> (w, reverse p)) $
-              listToMaybe $ catMaybes $ concat $
-              foldl' (step b) seed (tail w)
+search1 :: RawBoard -> BS.ByteString -> Maybe (BS.ByteString, Path)
+search1 b w = fmap (\p -> (w, ipath b $ reverse p)) $
+              listToMaybe $ catMaybes $ ungrid $
+              BS.foldl' (step b) seed (BS.tail w)
   where
-    seed = flip mapWithPos b $ \pos bc -> if bc == head w
-                                            then Just [pos]
-                                            else Nothing
+    seed = b `gfor` \i bc -> if bc == BS.head w then Just [i] else Nothing
 
 data T
 

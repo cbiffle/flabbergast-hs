@@ -3,12 +3,14 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Bench where
 
 import Criterion.Main
 import Criterion.Types (reportFile)
 import Control.DeepSeq (force, NFData)
+import qualified Data.ByteString.Char8 as BS
 import Paths_boggle
 import Base
 
@@ -19,10 +21,10 @@ import qualified Traversal.FilteredPrefixSet as Set
 loadDictFile :: FilePath -> IO RawDictionary
 loadDictFile name = do
   p <- getDataFileName name
-  force . lines <$> readFile p
+  BS.lines <$> BS.readFile p
 
 board4x4 :: RawBoard
-board4x4 = ["INVS","TENE","APUU","GNDO"]
+board4x4 = mkGridOf ["INVS","TENE","APUU","GNDO"]
 
 
 -- | Benchmark that applies the solver repeatedly to a given dictionary and

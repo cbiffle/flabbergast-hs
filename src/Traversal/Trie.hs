@@ -19,15 +19,15 @@ type Dictionary = T.Trie ()
 instance NFData a => NFData (T.Trie a) where
   rnf = rnf . T.toList
 
-search :: Dictionary -> RawBoard -> Path -> B.ByteString -> [(String, Path)]
+search :: Dictionary -> RawBoard -> IPath -> B.ByteString -> Results
 search d b path word
   | T.null d = []
   | otherwise =
-  (if word `T.member` d then ((BC.unpack word, reverse path) :) else id)
-  [r | n <- nextSteps b (head path)
-     , n `notElem` path
-     , let bc = b !! snd n !! fst n
-     , let p' = n : path
+  (if word `T.member` d then ((word, ipath b $ reverse path) :) else id)
+  [r | i <- neighborIndices b (head path)
+     , i `notElem` path
+     , let bc = b `at` i
+     , let p' = i : path
      , let w' = word `BC.snoc` bc
      , r <- search (w' `T.submap` d) b p' w'
      ]
@@ -36,13 +36,13 @@ data T
 
 instance Solver T where
   type CookedDict T = Dictionary
-  cookDict = T.fromList . fmap (\s -> (BC.pack s, ()))
+  cookDict = T.fromList . fmap (\s -> (s, ()))
 
   type CookedBoard T = RawBoard
   cookBoard = id
 
   solve d b = uniqBy fst $
-              [r | pos <- positions b
-                 , r <- search d b [pos]
-                                   (BC.singleton (b !! snd pos !! fst pos))
+              [r | i <- indices b
+                 , r <- search d b [i]
+                                   (BC.singleton (b `at` i))
                  ]

@@ -17,6 +17,7 @@ description:         Please see the README on GitHub at <https://github.com/cbif
 
 dependencies:
 - base >= 4.7 && < 5
+- bytestring
 
 data-files:
 - bench/dict.txt
@@ -24,7 +25,6 @@ data-files:
 library:
   source-dirs: src
   dependencies:
-  - bytestring
   - bytestring-trie
   - containers
   - criterion
@@ -34,17 +34,20 @@ library:
   - split
   - unordered-containers
   - vector
+  ghc-options:
+  - -O2
 
-  #executables:
-  #  boggle-exe:
-  #    main:                Main.hs
-  #    source-dirs:         app
-  #    ghc-options:
-  #    - -threaded
-  #    - -rtsopts
-  #    - -with-rtsopts=-N
-  #    dependencies:
-  #    - boggle
+executables:
+  solver:
+    main:                Main.hs
+    source-dirs:         bin
+    ghc-options:
+    - -O2
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - boggle
 
 tests:
   boggle-test:

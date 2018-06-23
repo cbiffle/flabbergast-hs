@@ -23,6 +23,7 @@ import Control.Arrow ((&&&))
 import Data.List (sort, isSubsequenceOf, foldl')
 import Data.Maybe (listToMaybe, maybeToList)
 import Control.DeepSeq (NFData(..))
+import qualified Data.ByteString.Char8 as BS
 import Base
 
 -- | Performs one step of the cheap scan, for one character of the target word.
@@ -33,30 +34,31 @@ import Base
 --
 -- This method is *almost* precise, but does not detect reuse of the same square
 -- within a word, so there's some risk of false positive.
-cheapStep :: RawBoard -> [[Bool]] -> Char -> [[Bool]]
+cheapStep :: RawBoard -> GridOf Bool -> Char -> GridOf Bool
 cheapStep b last c =
-  flip mapWithPos b $ \p bc -> bc == c
-                               && or [last `tile` p' | p' <- nextSteps b p]
+  b `gfor` \i bc -> bc == c
+                    && or [last `at` i' | i' <- neighborIndices b i]
 
 -- | Scans a board for potential places 'w' can occur.
-cheap :: RawBoard -> String -> Bool
-cheap b w = or $ concat $ foldl' (cheapStep b) trues w
-    where trues = map (map (const True)) b
+cheap :: RawBoard -> BS.ByteString -> Bool
+cheap b w = or $ ungrid $ BS.foldl' (cheapStep b) trues w
+    where trues = b `gfor` \_ _ -> True
 
 -- | Searches for an instance of word 'target' in 'b' using depth-first search.
 -- This is nearly identical to my naive reference traversal.
-expensive :: RawBoard -> String -> Maybe (String, Path)
+expensive :: RawBoard -> BS.ByteString -> Maybe (BS.ByteString, Path)
 expensive b target = listToMaybe $
-                     [r | p <- positions b
-                        , b `tile` p == head target
-                        , r <- search (tail target) [p]]
+                     [r | i <- indices b
+                        , b `at` i == BS.head target
+                        , r <- search (BS.tail target) [i]]
   where
-    search [] p = [(target, reverse p)]
-    search (c : cs) path =
-      [r | n <- nextSteps b (head path)
-         , n `notElem` path
-         , b `tile` n == c
-         , r <- search cs (n : path)
+    search w path
+      | BS.null w = [(target, ipath b $ reverse path)]
+      | otherwise =
+      [r | i <- neighborIndices b (head path)
+         , i `notElem` path
+         , b `at` i == BS.head w
+         , r <- search (BS.tail w) (i : path)
          ]
 
 data T
