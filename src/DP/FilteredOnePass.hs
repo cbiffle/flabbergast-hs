@@ -4,10 +4,8 @@
 -- algorithm scales linearly in the size of the *used* dictionary.
 module DP.FilteredOnePass (T) where
 
-import Control.Arrow ((&&&))
 import Data.List (foldl')
 import Data.Maybe (listToMaybe, maybeToList)
-import qualified Data.Set as S
 import qualified Data.ByteString.Char8 as BS
 import Base
 import ByteStringUtil
@@ -19,8 +17,7 @@ step b paths c = b `gfor` \i bc ->
   [i : path | bc == c
             , ni <- neighborIndices b i
             , path <- paths `at` ni
-            , i `notElem` path
-            ]
+            , i `notElem` path]
 
 -- | Searches for instances of a single candidate word 'w' in 'b'. Returns one
 -- such instance if found.

@@ -40,6 +40,7 @@ instance Show (GridOf Char) where
   show g = unlines $ chunksOf (goWidth g) $ V.toList $ goVec g
 
 gfor (GO v p n w) f = GO (V.imap f v) p n w
+{-# INLINE gfor #-}
 
 mkGridOf :: [BS.ByteString] -> GridOf Char
 mkGridOf b =
@@ -80,6 +81,7 @@ boardWidth = goWidth
 boardHeight b = V.length (goVec b) `div` goWidth b
   -- TODO: these are probably obsolescent.
 
+{-# INLINE at #-}
 b `at` i = goVec b V.! i
 
 b `tile` p = let Just i = V.elemIndex p $ goPositions b
@@ -151,13 +153,21 @@ checkWord b word path = forM_ (zip (BS.unpack word) path) $ \(c, p) ->
     then pure ()
     else Left $ concat ["Board does not contain '", [c], "' at ", show p]
 
--- | Checks that the path is internally valid, i.e. does not self-intersect.
+-- | Checks that the path is internally valid, i.e. does not self-intersect and
+-- moves in legal steps.
 checkPath :: Path -> Either String ()
-checkPath ps = forM_ (group $ sort ps) $ \pgroup ->
-  case pgroup of
+checkPath ps = do
+  forM_ (group $ sort ps) $ \pgroup -> case pgroup of
     [_] -> pure ()
     (p : _) -> Left $ concat ["Position ", show p, " appears "
                              , show (length pgroup), " times in path"]
+  forM_ (zip ps (tail ps)) $ \(b@(bx, by), e@(ex, ey)) ->
+    let dx = abs (bx - ex)
+        dy = abs (by - ey)
+    in if dx <= 1 && dy <= 1 && (dx == 1 || dy == 1)
+        then pure ()
+        else Left $ concat ["Path contains illegal move from ", show b, " to ",
+                            show e]
 
 checkLegalWords :: RawDictionary -> [BS.ByteString] -> Either String ()
 checkLegalWords d ws = case ws \\ map fst d of
