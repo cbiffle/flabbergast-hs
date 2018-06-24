@@ -3,6 +3,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE OverloadedStrings #-}
 import Criterion.Main
 import Criterion.Types (reportFile)
 import Control.DeepSeq (force, NFData)
@@ -12,9 +13,23 @@ import Bench
 
 import qualified DP.Filtered1PV as DP
 import qualified Traversal.FilteredTrie as Trie
-import qualified Traversal.FilteredPrefixHAMT as Set
+import qualified Traversal.IncrementalFPHAMT as Set
 
-boards = [("4x4", board4x4)]
+boards = [ ("4x4", board4x4)
+         , ("5x5", mkGridOf [ "EEQPO"
+                            , "NIEOE"
+                            , "SOESR"
+                            , "PPHCE"
+                            , "DEITE"
+                            ])
+         , ("6x6", mkGridOf [ "IGYREN"
+                            , "OTRHEO"
+                            , "SLETLD"
+                            , "GEHDRO"
+                            , "PEARRE"
+                            , "NETIIM"
+                            ])
+         ]
 
 benches =
   [ comboBench @Set.T "set"

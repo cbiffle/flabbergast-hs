@@ -108,6 +108,13 @@ dice92 = [ "LRYTTE", "VTHRWE", "EGHWNE", "SEOTIS"
          , "YLDEVR", "ZNRNHL", "NMIQHU", "OBBAOJ"
          ]
 
+dice25 = [ "AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM"
+         , "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCENST"
+         , "CEIILT", "CEILPT", "CEIPST", "DDHNOT", "DHHLOR"
+         , "DHLNOR", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU"
+         , "FIPRSY", "GORRVW", "IPRRRY", "NOOTUW", "OOOTTU"
+         ]
+
 newtype Boggle92 = Boggle92 RawBoard
 
 instance Arbitrary Boggle92 where

@@ -21,6 +21,7 @@ import qualified Traversal.FilteredHAMT
 import qualified Traversal.FilteredTrie
 import qualified Traversal.FilteredPrefixHAMT
 import qualified Traversal.FilteredPrefixSet
+import qualified Traversal.IncrementalFPHAMT
 
 sfunc :: forall s. (Solver s, Typeable s)
       => RawDictionary -> Weigh ()
@@ -32,6 +33,10 @@ sfunc d = func name
 main = do
   !d <- force <$> loadDictFile "bench/dict.txt"
   mainWith $ do
+    setColumns [Case, Allocated, GCs, Live]
+
+    io "dictionary" (fmap force . loadDictFile) "bench/dict.txt"
+
     sfunc @DP.TwoPass.T d
     sfunc @DP.OnePass.T d
     sfunc @DP.OnePassSinglePath.T d
@@ -43,3 +48,4 @@ main = do
     sfunc @Traversal.FilteredTrie.T d
     sfunc @Traversal.FilteredPrefixHAMT.T d
     sfunc @Traversal.FilteredPrefixSet.T d
+    sfunc @Traversal.IncrementalFPHAMT.T d
