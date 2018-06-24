@@ -15,10 +15,6 @@ import qualified Data.ByteString.Char8 as BS
 import Paths_boggle
 import Base
 
-import qualified DP.Filtered1PV as DP
-import qualified Traversal.FilteredTrie as Trie
-import qualified Traversal.FilteredPrefixSet as Set
-
 loadDictFile :: FilePath -> IO RawDictionary
 loadDictFile name = do
   p <- getDataFileName name

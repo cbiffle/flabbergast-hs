@@ -11,10 +11,8 @@ import Paths_boggle
 import Base
 import Bench
 
-import qualified DP.Filtered1PV
 import qualified DP.FilteredOnePass
 import qualified DP.OnePass
-import qualified DP.OnePassSinglePath
 import qualified DP.TwoPass
 import qualified Traversal.FilteredHAMT
 import qualified Traversal.FilteredPrefixHAMT
@@ -50,8 +48,6 @@ benches =
   , (Size4, comboBench @DP.TwoPass.T "DP.TwoPass")
   , (Size4, comboBench @DP.OnePass.T "DP.OnePass")
   , (Size4, comboBench @DP.FilteredOnePass.T "DP.FilteredOnePass")
-  , (Size4, comboBench @DP.OnePassSinglePath.T "DP.OnePassSinglePath")
-  , (Size4, comboBench @DP.Filtered1PV.T "DP.Filtered1PV")
   ]
 
 main = do
