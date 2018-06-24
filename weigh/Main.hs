@@ -12,7 +12,7 @@ import Base
 
 import qualified DP.TwoPass
 import qualified DP.OnePass
-import qualified DP.OnePassSinglePath
+import qualified DP.FilteredOnePass
 import qualified DP.Filtered1PV
 import qualified Traversal.Trie
 import qualified Traversal.Set
@@ -39,7 +39,7 @@ main = do
 
     sfunc @DP.TwoPass.T d
     sfunc @DP.OnePass.T d
-    sfunc @DP.OnePassSinglePath.T d
+    sfunc @DP.FilteredOnePass.T d
     sfunc @DP.Filtered1PV.T d
     sfunc @Traversal.Trie.T d
     sfunc @Traversal.Set.T d

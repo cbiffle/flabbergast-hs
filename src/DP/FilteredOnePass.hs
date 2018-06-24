@@ -1,12 +1,8 @@
 {-# LANGUAGE TypeFamilies #-}
 
--- | Dynamic programming, redux.
---
--- Instead of a fuzzy DP solution followed by an exact DFS, this is an exact
--- DP solution. In each step, it propagates all valid paths through a given
--- tile for a given word. By maintaining the path information it can detect,
--- and reject, self-intersecting paths.
-module DP.OnePass (T) where
+-- | Dynamic programming, redux^2. Filtering the dictionary, since this
+-- algorithm scales linearly in the size of the *used* dictionary.
+module DP.FilteredOnePass (T) where
 
 import Control.Arrow ((&&&))
 import Data.List (foldl')
@@ -14,6 +10,7 @@ import Data.Maybe (listToMaybe, maybeToList)
 import qualified Data.Set as S
 import qualified Data.ByteString.Char8 as BS
 import Base
+import ByteStringUtil
 
 -- | Propagates potential paths, given a grid of known paths and the next
 -- character in the word.
@@ -22,7 +19,8 @@ step b paths c = b `gfor` \i bc ->
   [i : path | bc == c
             , ni <- neighborIndices b i
             , path <- paths `at` ni
-            , i `notElem` path]
+            , i `notElem` path
+            ]
 
 -- | Searches for instances of a single candidate word 'w' in 'b'. Returns one
 -- such instance if found.
@@ -39,6 +37,9 @@ instance Solver T where
   type CookedBoard T = RawBoard
   cookBoard = id
 
-  solve d b = [r | (word, _) <- d
-                 , r <- maybeToList $ search1 b word
-                 ]
+  solve d b =
+    let cs = BS.sort $ BS.pack $ ungrid b
+    in [r | (word, sorted) <- d
+          , sorted `isSubsequenceOf` cs
+          , r <- maybeToList $ search1 b word
+          ]
