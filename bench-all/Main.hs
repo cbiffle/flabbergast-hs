@@ -24,8 +24,9 @@ import qualified Traversal.FilteredTrie
 import qualified Traversal.List
 import qualified Traversal.Set
 import qualified Traversal.Trie
+import qualified Traversal.Heap
 
-data SizeClass = Size2 | Size3 | Size4 deriving (Eq, Show)
+data SizeClass = Size2 | Size3 | Size4 deriving (Eq, Ord, Show)
 
 boards = [ (Size2, mkGridOf ["AW", "OP"])
          , (Size3, mkGridOf ["OCN", "ENN", "VNA"])
@@ -45,6 +46,7 @@ benches =
   , (Size4, comboBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
   , (Size4, comboBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
   , (Size4, comboBench @Traversal.IncrementalFPHAMT.T "Traversal.IncrementalFPHAMT")
+  , (Size4, comboBench @Traversal.Heap.T "Traversal.Heap")
 
   , (Size4, comboBench @DP.TwoPass.T "DP.TwoPass")
   , (Size4, comboBench @DP.OnePass.T "DP.OnePass")
@@ -57,5 +59,5 @@ main = do
   let config = defaultConfig { reportFile = Just "bench-all.html" }
   defaultMainWith config $ flip map boards $ \(speed, board) ->
     bgroup (show speed) $
-      flip map (map snd $ filter ((== speed) . fst) benches) $ \bnch ->
+      flip map (map snd $ filter ((>= speed) . fst) benches) $ \bnch ->
         bnch rawDict board
