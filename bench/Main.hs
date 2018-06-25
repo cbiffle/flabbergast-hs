@@ -14,6 +14,7 @@ import Bench
 import qualified DP.FilteredOnePassTree as DP
 import qualified Traversal.FilteredTrie as Trie
 import qualified Traversal.IncrementalFPHAMT as Set
+import qualified Traversal.Heap as Heap
 
 boards = [ ("4x4", board4x4)
          , ("5x5", mkGridOf [ "EEQPO"
@@ -35,6 +36,7 @@ benches =
   [ comboBench @Set.T "set"
   , comboBench @Trie.T "trie"
   , comboBench @DP.T "dp"
+  , comboBench @Heap.T "heap"
   ]
 
 main = do

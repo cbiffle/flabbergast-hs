@@ -7,7 +7,7 @@ module Base where
 
 import Control.Arrow ((&&&))
 import Control.DeepSeq (NFData(..))
-import Control.Monad (replicateM, forM_)
+import Control.Monad (replicateM, forM_, when)
 import Test.QuickCheck
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Vector as V
@@ -148,10 +148,14 @@ instance Arbitrary FakeDict where
 -- | Checks that the 'word' claimed to be present at 'path' in 'b' is actually
 -- there.
 checkWord :: RawBoard -> BS.ByteString -> Path -> Either String ()
-checkWord b word path = forM_ (zip (BS.unpack word) path) $ \(c, p) ->
-  if b `tile` p == c
-    then pure ()
-    else Left $ concat ["Board does not contain '", [c], "' at ", show p]
+checkWord b word path = do
+  when (BS.length word /= length path) $
+    Left $ concat ["Path length ", show (length path), " does not match word ",
+                   "length ", show (BS.length word)]
+  forM_ (zip (BS.unpack word) path) $ \(c, p) ->
+    if b `tile` p == c
+      then pure ()
+      else Left $ concat ["Board does not contain '", [c], "' at ", show p]
 
 -- | Checks that the path is internally valid, i.e. does not self-intersect and
 -- moves in legal steps.
