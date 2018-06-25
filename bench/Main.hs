@@ -7,7 +7,7 @@
 import Criterion.Main
 import Criterion.Types (reportFile)
 import Control.DeepSeq (force, NFData)
-import Paths_boggle
+import Paths_flabbergast
 import Base
 import Bench
 
@@ -41,6 +41,6 @@ benches =
 
 main = do
   !rawDict <- loadDictFile "bench/dict.txt"
-  let config = defaultConfig { reportFile = Just "boggle-bench.html" }
+  let config = defaultConfig { reportFile = Just "bench-best.html" }
   defaultMainWith config $ flip map boards $ \(bname, board) ->
     bgroup bname $ flip map benches $ \f -> f rawDict board

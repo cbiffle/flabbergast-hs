@@ -12,7 +12,7 @@ import Criterion.Types (reportFile)
 import Control.Arrow ((&&&))
 import Control.DeepSeq (force, NFData)
 import qualified Data.ByteString.Char8 as BS
-import Paths_boggle
+import Paths_flabbergast
 import Base
 
 loadDictFile :: FilePath -> IO RawDictionary

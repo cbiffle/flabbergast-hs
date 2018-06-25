@@ -1,6 +1,6 @@
-name:                boggle
+name:                flabbergast
 version:             0.1.0.0
-github:              "cbiffle/boggle"
+github:              "cbiffle/flabbergast-hs"
 license:             BSD3
 author:              "Cliff L. Biffle"
 maintainer:          "code@cliffle.com"
@@ -13,7 +13,7 @@ copyright:           "2018 Cliff L. Biffle"
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/cbiffle/boggle#readme>
+description:         Please see the README on GitHub at <https://github.com/cbiffle/flabbergast-hs#readme>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -49,10 +49,10 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - boggle
+    - flabbergast
 
 tests:
-  boggle-test:
+  tests:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -60,18 +60,18 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - boggle
+    - flabbergast
     - hspec
     - QuickCheck
     - split
-  boggle-weigh:
+  weigh:
     main:                Main.hs
     source-dirs:         weigh
     ghc-options:
     - -threaded
     - -rtsopts
     dependencies:
-    - boggle
+    - flabbergast
     - weigh
     - deepseq
 
@@ -84,7 +84,7 @@ benchmarks:
     - -threaded
     - -rtsopts
     dependencies:
-    - boggle
+    - flabbergast
     - criterion
     - deepseq
   all:
@@ -95,6 +95,6 @@ benchmarks:
     - -threaded
     - -rtsopts
     dependencies:
-    - boggle
+    - flabbergast
     - criterion
     - deepseq
