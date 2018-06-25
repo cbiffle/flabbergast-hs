@@ -11,7 +11,7 @@ import Paths_boggle
 import Base
 import Bench
 
-import qualified DP.FilteredOnePass as DP
+import qualified DP.FilteredOnePassTree as DP
 import qualified Traversal.FilteredTrie as Trie
 import qualified Traversal.IncrementalFPHAMT as Set
 

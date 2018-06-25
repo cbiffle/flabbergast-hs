@@ -12,6 +12,7 @@ import Base
 import Bench
 
 import qualified DP.FilteredOnePass
+import qualified DP.FilteredOnePassTree
 import qualified DP.OnePass
 import qualified DP.TwoPass
 import qualified Traversal.FilteredHAMT
@@ -48,6 +49,7 @@ benches =
   , (Size4, comboBench @DP.TwoPass.T "DP.TwoPass")
   , (Size4, comboBench @DP.OnePass.T "DP.OnePass")
   , (Size4, comboBench @DP.FilteredOnePass.T "DP.FilteredOnePass")
+  , (Size4, comboBench @DP.FilteredOnePassTree.T "DP.FilteredOnePassTree")
   ]
 
 main = do
