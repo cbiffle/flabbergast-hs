@@ -94,6 +94,31 @@ bored, here are the times for a 2x2 board:
 1. 42.1ms/2x2: [Traversal.Set](../tree/master/src/Traversal/Set.hs)
 1. 187ms/2x2: [Traversal.List](../tree/master/src/Traversal/List.hs)
 
+And memory allocations per 2x2 board (note, this is *allocated*, not live --
+most gets garbage collected immediately).
+
+| Case                         |     Allocated |   GCs |
+| ---------------------------- | ------------: | ----: |
+| Traversal.NotHeap            |     3,336,832 |     3 |
+| Traversal.FilteredHeap       |     3,671,104 |     3 |
+| Traversal.FilteredTrie       |     3,790,416 |     3 |
+| Traversal.IncrementalFPHAMT  |     4,391,072 |     4 |
+| Traversal.Heap               |     4,945,728 |     4 |
+| Traversal.FilteredPrefixHAMT |     8,966,888 |     6 |
+| Traversal.FilteredPrefixSet  |    11,884,288 |    11 |
+| DP.FilteredOnePassTree       |    14,402,224 |    13 |
+| DP.FilteredOnePass           |    17,289,736 |    16 |
+| Traversal.Trie               |   332,071,664 |   268 |
+| DP.TwoPass                   |   911,207,128 |   881 |
+| DP.OnePass                   | 1,062,036,680 | 1,026 |
+| Traversal.Set                | 4,162,694,960 | 4,008 |
+| Traversal.FilteredSet        | 4,133,006,656 | 3,979 |
+| Traversal.FilteredHAMT       | 4,326,976,040 | 4,178 |
+
+The main lesson there, in my opinion, is that some algorithms that would win
+from a complexity-analysis perspective (like `Traversal.Trie`, or `DP.OnePass`
+compared to `TwoPass`) lose in practice because of memory allocation patterns.
+
 [^1]: I haven't actually checked whether Boggle is currently trademarked;
       coding is much more fun than searching the USPTO database.
 
