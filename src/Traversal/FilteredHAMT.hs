@@ -9,18 +9,7 @@ import qualified Data.ByteString.Char8 as BS
 import Base
 import Uniq
 import ByteStringUtil
-
-type Dict = H.HashSet BS.ByteString
-
-search :: Dict -> RawBoard -> IPath -> BS.ByteString -> Results
-search d b path word =
-  (if word `H.member` d then ((word, ipath b $ reverse path) :) else id)
-  [r | n <- neighborIndices b (head path)
-     , n `notElem` path
-     , let p' = n : path
-     , let w' = word `BS.snoc` (b `at` n)
-     , r <- search d b p' w'
-     ]
+import Traversal.Generic
 
 data T
 
@@ -28,7 +17,4 @@ instance Solver T where
   solve d b =
     let cs = BS.pack $ sort $ ungrid b
         d' = H.fromList [w | (w, sw) <- d, sw `isSubsequenceOf` cs]
-    in uniqBy fst $
-       [r | pos <- indices b
-          , r <- search d' b [pos] $ BS.singleton $ b `at` pos
-          ]
+    in uniqBy fst $ paths (exhaustive (`H.member` d')) b
