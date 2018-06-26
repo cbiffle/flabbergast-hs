@@ -74,25 +74,25 @@ The algorithms fall into two broad categories:
 Leaderboard for 4x4 boards last time I updated this README (fastest to slowest
 on my Haswell machine):
 
-1. 5.92ms/4x4: [Traversal.NotHeap](../tree/master/src/Traversal/NotHeap.hs)
-1. 5.96ms/4x4: [Traversal.Heap](../tree/master/src/Traversal/Heap.hs)
-1. 19.5ms/4x4: [Traversal.FilteredTrie](../tree/master/src/Traversal/FilteredTrie.hs)
-1. 20.3ms/4x4: [DP.FilteredOnePassTree](../tree/master/src/DP/FilteredOnePassTree.hs)
-1. 20.9ms/4x4: [DP.FilteredOnePass](../tree/master/src/DP/FilteredOnePass.hs)
-1. 21.6ms/4x4: [Traversal.IncrementalFPHAMT](../tree/master/src/Traversal/IncrementalFPHAMT.hs)
-1. 24.4ms/4x4: [Traversal.FilteredPrefixHAMT](../tree/master/src/Traversal/FilteredPrefixHAMT.hs)
-1. 25.6ms/4x4: [Traversal.FilteredPrefixSet](../tree/master/src/Traversal/FilteredPrefixSet.hs)
-1. 222ms/4x4: [DP.TwoPass](../tree/master/src/DP/TwoPass.hs)
-1. 231ms/4x4: [DP.OnePass](../tree/master/src/DP/OnePass.hs)
-1. 305ms/4x4: [Traversal.Trie](../tree/master/src/Traversal/Trie.hs)
+1. 5.92ms/4x4: [Traversal.NotHeap](src/Traversal/NotHeap.hs)
+1. 5.96ms/4x4: [Traversal.Heap](src/Traversal/Heap.hs)
+1. 19.5ms/4x4: [Traversal.FilteredTrie](src/Traversal/FilteredTrie.hs)
+1. 20.3ms/4x4: [DP.FilteredOnePassTree](src/DP/FilteredOnePassTree.hs)
+1. 20.9ms/4x4: [DP.FilteredOnePass](src/DP/FilteredOnePass.hs)
+1. 21.6ms/4x4: [Traversal.IncrementalFPHAMT](src/Traversal/IncrementalFPHAMT.hs)
+1. 24.4ms/4x4: [Traversal.FilteredPrefixHAMT](src/Traversal/FilteredPrefixHAMT.hs)
+1. 25.6ms/4x4: [Traversal.FilteredPrefixSet](src/Traversal/FilteredPrefixSet.hs)
+1. 222ms/4x4: [DP.TwoPass](src/DP/TwoPass.hs)
+1. 231ms/4x4: [DP.OnePass](src/DP/OnePass.hs)
+1. 305ms/4x4: [Traversal.Trie](src/Traversal/Trie.hs)
 
 And among the algorithms that are too slow to complete a 4x4 board before I get
 bored, here are the times for a 2x2 board:
 
-1. 10.5ms/2x2: [Traversal.FilteredHAMT](../tree/master/src/Traversal/FilteredHAMT.hs)
-1. 11.0ms/2x2: [Traversal.FilteredSet](../tree/master/src/Traversal/FilteredSet.hs)
-1. 42.1ms/2x2: [Traversal.Set](../tree/master/src/Traversal/Set.hs)
-1. 187ms/2x2: [Traversal.List](../tree/master/src/Traversal/List.hs)
+1. 10.5ms/2x2: [Traversal.FilteredHAMT](src/Traversal/FilteredHAMT.hs)
+1. 11.0ms/2x2: [Traversal.FilteredSet](src/Traversal/FilteredSet.hs)
+1. 42.1ms/2x2: [Traversal.Set](src/Traversal/Set.hs)
+1. 187ms/2x2: [Traversal.List](src/Traversal/List.hs)
 
 And memory allocations per 2x2 board (note, this is *allocated*, not live --
 most gets garbage collected immediately).
