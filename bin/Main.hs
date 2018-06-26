@@ -10,4 +10,4 @@ main = do
   dict <- map (id &&& BS.sort) . BS.lines <$> BS.readFile "dict.txt"
   board <- mkGridOf . BS.lines <$> BS.readFile "board.txt"
 
-  forM_ (cookAndSolve @ALG.T dict board) $ \(w, _) -> BS.putStrLn w
+  forM_ (solve @ALG.T dict board) $ \(w, _) -> BS.putStrLn w

@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
-
 -- | HAMT-based filtered dictionary.
 module Traversal.FilteredHAMT (T) where
 
@@ -27,11 +25,9 @@ search d b path word =
 data T
 
 instance Solver T where
-  type CookedBoard T = (RawBoard, BS.ByteString)
-  cookBoard b = (b, BS.pack $ sort $ ungrid b)
-
-  solve d (b, cs) =
-    let d' = H.fromList [w | (w, sw) <- d, sw `isSubsequenceOf` cs]
+  solve d b =
+    let cs = BS.pack $ sort $ ungrid b
+        d' = H.fromList [w | (w, sw) <- d, sw `isSubsequenceOf` cs]
     in uniqBy fst $
        [r | pos <- indices b
           , r <- search d' b [pos] $ BS.singleton $ b `at` pos

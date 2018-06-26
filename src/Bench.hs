@@ -23,26 +23,8 @@ loadDictFile name = do
 board4x4 :: RawBoard
 board4x4 = mkGridOf ["INVS","TENE","APUU","GNDO"]
 
-
 -- | Benchmark that applies the solver repeatedly to a given dictionary and
 -- board, cooking each only once.
-solveBench :: forall s.
-              (Solver s, NFData (CookedBoard s))
-           => RawDictionary -> RawBoard -> Benchmark
-solveBench d b =
-  let preB :: CookedBoard s = cookBoard @s b
-  in bench "solve-only" $ nf (uncurry (solve @s)) (d, preB)
-
--- | Benchmark that applies the solver repeatedly to a given dictionary and
--- board, cooking each every time.
-cookBench :: forall s. (Solver s, NFData (CookedBoard s))
-          => RawDictionary -> RawBoard -> Benchmark
-cookBench d b = bench "cook-all" $ nf (uncurry (cookAndSolve @s)) (d, b)
-
-comboBench :: forall s.
-              (Solver s, NFData (CookedBoard s))
+solveBench :: forall s. (Solver s)
            => String -> RawDictionary -> RawBoard -> Benchmark
-comboBench name d b = bgroup name
-    [ solveBench @s d b
-    , cookBench @s d b
-    ]
+solveBench name d b = bench name $ nf (uncurry (solve @s)) (d, b)

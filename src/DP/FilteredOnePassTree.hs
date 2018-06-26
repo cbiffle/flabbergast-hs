@@ -1,4 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE BangPatterns #-}
 
 -- | Dynamic programming, redux^3. Use a specialized data structure intended to
@@ -55,9 +54,6 @@ search1 b w =
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b =
     let cs = BS.sort $ BS.pack $ ungrid b
     in [r | (word, sorted) <- d

@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
-
 -- | Dynamic programming.
 --
 -- This method is after Golam Kawsar's work here:
@@ -64,9 +62,6 @@ expensive b target = listToMaybe $
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b = [r | (word, _) <- d
                  , cheap b word
                  , r <- maybeToList $ expensive b word

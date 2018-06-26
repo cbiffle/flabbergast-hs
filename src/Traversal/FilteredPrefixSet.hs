@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
-
 -- | Set-based filtered dictionary with prefix set.
 module Traversal.FilteredPrefixSet (T) where
 
@@ -27,11 +25,9 @@ search d pre b path word =
 data T
 
 instance Solver T where
-  type CookedBoard T = (RawBoard, BS.ByteString)
-  cookBoard = (id &&& (BS.pack . sort . ungrid))
-
-  solve d (b, cs) =
-    let df = [w | (w, sw) <- d, sw `isSubsequenceOf` cs]
+  solve d b =
+    let cs = BS.pack $ sort $ ungrid b
+        df = [w | (w, sw) <- d, sw `isSubsequenceOf` cs]
         d' = S.fromList df
         pre = S.fromList $ [t | w <- df, t <- BS.inits w]
     in uniqBy fst $

@@ -1,4 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
 -- | Trie-based full dictionary using ByteStrings.
 --
 -- I'm not using ByteStrings here because I think they'll confer any particular
@@ -35,9 +34,6 @@ search d b path word
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b =
     let trie = T.fromList $ fmap (\(w, _) -> (w, ())) d
     in uniqBy fst $

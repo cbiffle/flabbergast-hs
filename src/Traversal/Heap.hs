@@ -1,5 +1,4 @@
 {-# LANGUAGE BangPatterns #-}
-{-# LANGUAGE TypeFamilies #-}
 
 -- | Heap-based solver.
 --
@@ -80,9 +79,6 @@ drain b h prefix = case H.uncons h of
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b = map (second (ipath b)) $ (`appEndo` []) $
               flip evalState d $ execWriterT $
               check b start BS.empty undefined  -- TODO hack

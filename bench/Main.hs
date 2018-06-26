@@ -33,10 +33,10 @@ boards = [ ("4x4", board4x4)
          ]
 
 benches =
-  [ comboBench @Set.T "set"
-  , comboBench @Trie.T "trie"
-  , comboBench @DP.T "dp"
-  , comboBench @Heap.T "heap"
+  [ solveBench @Set.T "set"
+  , solveBench @Trie.T "trie"
+  , solveBench @DP.T "dp"
+  , solveBench @Heap.T "heap"
   ]
 
 main = do

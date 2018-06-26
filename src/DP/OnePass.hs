@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
-
 -- | Dynamic programming, redux.
 --
 -- Instead of a fuzzy DP solution followed by an exact DFS, this is an exact
@@ -36,9 +34,6 @@ search1 b w =
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b = [r | (word, _) <- d
                  , r <- maybeToList $ search1 b word
                  ]

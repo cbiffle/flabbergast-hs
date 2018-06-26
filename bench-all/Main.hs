@@ -43,24 +43,24 @@ boards = [ (Size2, mkGridOf ["AW", "OP"])
 
 
 benches =
-  [ (Size2, comboBench @Traversal.List.T "Traversal.List")
+  [ (Size4, solveBench @Traversal.List.T "Traversal.List")
 
-  , (Size3, comboBench @Traversal.Set.T "Traversal.Set")
-  , (Size3, comboBench @Traversal.FilteredSet.T "Traversal.FilteredSet")
-  , (Size3, comboBench @Traversal.FilteredHAMT.T "Traversal.FilteredHAMT")
+  , (Size3, solveBench @Traversal.Set.T "Traversal.Set")
+  , (Size3, solveBench @Traversal.FilteredSet.T "Traversal.FilteredSet")
+  , (Size3, solveBench @Traversal.FilteredHAMT.T "Traversal.FilteredHAMT")
 
-  , (Size4, comboBench @Traversal.FilteredPrefixSet.T "Traversal.FilteredPrefixSet")
-  , (Size4, comboBench @Traversal.Trie.T "Traversal.Trie")
-  , (Size4, comboBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
-  , (Size4, comboBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
-  , (Size4, comboBench @Traversal.IncrementalFPHAMT.T "Traversal.IncrementalFPHAMT")
-  , (Size6, comboBench @Traversal.Heap.T "Traversal.Heap")
-  , (Size6, comboBench @Traversal.Heap.T "Traversal.NotHeap")
+  , (Size4, solveBench @Traversal.FilteredPrefixSet.T "Traversal.FilteredPrefixSet")
+  , (Size4, solveBench @Traversal.Trie.T "Traversal.Trie")
+  , (Size4, solveBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
+  , (Size4, solveBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
+  , (Size4, solveBench @Traversal.IncrementalFPHAMT.T "Traversal.IncrementalFPHAMT")
+  , (Size6, solveBench @Traversal.Heap.T "Traversal.Heap")
+  , (Size6, solveBench @Traversal.Heap.T "Traversal.NotHeap")
 
-  , (Size4, comboBench @DP.TwoPass.T "DP.TwoPass")
-  , (Size4, comboBench @DP.OnePass.T "DP.OnePass")
-  , (Size4, comboBench @DP.FilteredOnePass.T "DP.FilteredOnePass")
-  , (Size4, comboBench @DP.FilteredOnePassTree.T "DP.FilteredOnePassTree")
+  , (Size4, solveBench @DP.TwoPass.T "DP.TwoPass")
+  , (Size4, solveBench @DP.OnePass.T "DP.OnePass")
+  , (Size4, solveBench @DP.FilteredOnePass.T "DP.FilteredOnePass")
+  , (Size4, solveBench @DP.FilteredOnePassTree.T "DP.FilteredOnePassTree")
   ]
 
 main = do

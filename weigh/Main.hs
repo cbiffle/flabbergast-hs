@@ -29,7 +29,7 @@ import qualified Traversal.NotHeap
 sfunc :: forall s. (Solver s, Typeable s)
       => RawDictionary -> Weigh ()
 sfunc d = func name
-               (\(cd, b) -> solve @s cd (cookBoard @s b))
+               (\(cd, b) -> solve @s cd b)
                (force (d, board4x4))
   where name = tyConModule $ typeRepTyCon $ typeRep (Proxy @s)
 

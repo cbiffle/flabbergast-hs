@@ -1,4 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
 -- | A very high level, fairly naive implementation: exhaustive enumerate every
 -- possible path through the board, and check them against a (linked list)
 -- dictionary.
@@ -31,9 +30,6 @@ possibleSolutions b = [r | p <- indices b
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b = uniqBy fst $  -- because this *will* generate duplicate solutions
               filter ((`elem` map fst d) . fst) $  -- reject illegal words
               possibleSolutions b

@@ -68,13 +68,7 @@ ipath g = map (goPositions g V.!)
 type RawBoard = GridOf Char
 
 class Solver s where
-  type CookedBoard s
-  cookBoard :: RawBoard -> CookedBoard s
-  solve :: RawDictionary -> CookedBoard s -> Results
-
-cookAndSolve :: forall s. (Solver s)
-             => RawDictionary -> RawBoard -> Results
-cookAndSolve d b = solve @s d (cookBoard @s b)
+  solve :: RawDictionary -> RawBoard -> Results
 
 boardWidth, boardHeight :: RawBoard -> Int
 boardWidth = goWidth

@@ -1,4 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
 module Traversal.Set (T) where
 
 import qualified Data.Set as S
@@ -21,9 +20,6 @@ search d b path word =
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b =
     let set = S.fromList $ map fst d
     in uniqBy fst $

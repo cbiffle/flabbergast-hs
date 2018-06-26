@@ -22,7 +22,7 @@ genericSpec :: forall s. (Solver s) => Int -> Spec
 genericSpec n = do
   let bprop :: (Testable p) => p -> Property
       bprop = mapSize (const n) . property
-      solver = cookAndSolve @s
+      solver = solve @s
 
   context "corner cases" $ do
     it "finds no solutions in an empty board" $ property $

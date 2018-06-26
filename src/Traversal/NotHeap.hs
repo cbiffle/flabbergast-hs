@@ -1,5 +1,4 @@
 {-# LANGUAGE BangPatterns #-}
-{-# LANGUAGE TypeFamilies #-}
 
 -- | Heap-based solver, only using lists instead of heaps.
 --
@@ -77,9 +76,6 @@ uniq (a : rest) = a : uniq (dropWhile (== a) rest)
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b = map (second (ipath b)) $ (`appEndo` []) $
               flip evalState d $ execWriterT $
               check b start BS.empty undefined  -- TODO hack

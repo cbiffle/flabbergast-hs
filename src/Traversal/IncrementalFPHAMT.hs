@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
-
 -- | Filtered prefix HAMT using cheaply allocatable data structures with
 -- consistent incremental hashing.
 --
@@ -69,11 +67,9 @@ data T
 prefixPattern = (True, False) : repeat (False, True)
 
 instance Solver T where
-  type CookedBoard T = (RawBoard, BS.ByteString)
-  cookBoard b = (b, BS.pack $ sort $ ungrid b)
-
-  solve d (b, cs) =
-    let df = [mkIWord w | (w, sw) <- d, sw `isSubsequenceOf` cs]
+  solve d b =
+    let cs = BS.pack $ sort $ ungrid b
+        df = [mkIWord w | (w, sw) <- d, sw `isSubsequenceOf` cs]
         d' = H.fromListWith (\(a, b) (c, d) -> force (a || c, b || d)) $
              [e | w <- df, e <- zip (prefixes w) prefixPattern]
     in uniqBy fst $

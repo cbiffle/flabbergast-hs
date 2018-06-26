@@ -1,5 +1,4 @@
 {-# LANGUAGE BangPatterns #-}
-{-# LANGUAGE TypeFamilies #-}
 
 -- | Heap-based solver using filtered dictionary.
 module Traversal.FilteredHeap where
@@ -72,9 +71,6 @@ drain b h prefix = case H.uncons h of
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b =
     let cs = BS.pack $ sort $ ungrid b
         d' = [w | (w, s) <- d, s `isSubsequenceOf` cs]

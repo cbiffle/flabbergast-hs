@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
-
 -- | Dynamic programming, redux^2. Filtering the dictionary, since this
 -- algorithm scales linearly in the size of the *used* dictionary.
 module DP.FilteredOnePass (T) where
@@ -31,9 +29,6 @@ search1 b w =
 data T
 
 instance Solver T where
-  type CookedBoard T = RawBoard
-  cookBoard = id
-
   solve d b =
     let cs = BS.sort $ BS.pack $ ungrid b
     in [r | (word, sorted) <- d

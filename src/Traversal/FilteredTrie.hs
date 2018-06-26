@@ -1,4 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
 -- | Trie-based full traversal using ByteStrings and dictionary subsetting.
 module Traversal.FilteredTrie (T) where
 
@@ -30,11 +29,9 @@ search d b path word
 data T
 
 instance Solver T where
-  type CookedBoard T = (RawBoard, BC.ByteString)
-  cookBoard b = (b, BC.pack $ sort $ ungrid b)
-
-  solve d (b, cs) = 
-    let d' = T.fromList $ [(w, ()) | (w, sw) <- d, sw `isSubsequenceOf` cs]
+  solve d b = 
+    let cs = BC.pack $ sort $ ungrid b
+        d' = T.fromList $ [(w, ()) | (w, sw) <- d, sw `isSubsequenceOf` cs]
     in uniqBy fst $
        [r | pos <- indices b
           , r <- search d' b [pos]
