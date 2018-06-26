@@ -25,12 +25,20 @@ import qualified Traversal.List
 import qualified Traversal.Set
 import qualified Traversal.Trie
 import qualified Traversal.Heap
+import qualified Traversal.NotHeap
 
-data SizeClass = Size2 | Size3 | Size4 deriving (Eq, Ord, Show)
+data SizeClass = Size2 | Size3 | Size4 | Size6 deriving (Eq, Ord, Show)
 
 boards = [ (Size2, mkGridOf ["AW", "OP"])
          , (Size3, mkGridOf ["OCN", "ENN", "VNA"])
          , (Size4, board4x4)
+         , (Size6, mkGridOf [ "OAFMPE"
+                            , "IDALAA"
+                            , "AFTTIW"
+                            , "EOPASL"
+                            , "SDCWNO"
+                            , "NWLSHF"
+                            ])
          ]
 
 
@@ -46,7 +54,8 @@ benches =
   , (Size4, comboBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
   , (Size4, comboBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
   , (Size4, comboBench @Traversal.IncrementalFPHAMT.T "Traversal.IncrementalFPHAMT")
-  , (Size4, comboBench @Traversal.Heap.T "Traversal.Heap")
+  , (Size6, comboBench @Traversal.Heap.T "Traversal.Heap")
+  , (Size6, comboBench @Traversal.Heap.T "Traversal.NotHeap")
 
   , (Size4, comboBench @DP.TwoPass.T "DP.TwoPass")
   , (Size4, comboBench @DP.OnePass.T "DP.OnePass")

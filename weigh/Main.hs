@@ -24,6 +24,7 @@ import qualified Traversal.FilteredPrefixSet
 import qualified Traversal.IncrementalFPHAMT
 import qualified Traversal.Heap
 import qualified Traversal.FilteredHeap
+import qualified Traversal.NotHeap
 
 sfunc :: forall s. (Solver s, Typeable s)
       => RawDictionary -> Weigh ()
@@ -53,3 +54,4 @@ main = do
     sfunc @Traversal.IncrementalFPHAMT.T d
     sfunc @Traversal.Heap.T d
     sfunc @Traversal.FilteredHeap.T d
+    sfunc @Traversal.NotHeap.T d
