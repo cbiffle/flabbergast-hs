@@ -49,18 +49,18 @@ benches =
   , (Size3, solveBench @Traversal.FilteredSet.T "Traversal.FilteredSet")
   , (Size3, solveBench @Traversal.FilteredHAMT.T "Traversal.FilteredHAMT")
 
-  , (Size4, solveBench @Traversal.FilteredPrefixSet.T "Traversal.FilteredPrefixSet")
+  , (Size6, solveBench @Traversal.FilteredPrefixSet.T "Traversal.FilteredPrefixSet")
   , (Size4, solveBench @Traversal.Trie.T "Traversal.Trie")
-  , (Size4, solveBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
-  , (Size4, solveBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
-  , (Size4, solveBench @Traversal.IncrementalFPHAMT.T "Traversal.IncrementalFPHAMT")
+  , (Size6, solveBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
+  , (Size6, solveBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
+  , (Size6, solveBench @Traversal.IncrementalFPHAMT.T "Traversal.IncrementalFPHAMT")
   , (Size6, solveBench @Traversal.Heap.T "Traversal.Heap")
   , (Size6, solveBench @Traversal.Heap.T "Traversal.NotHeap")
 
   , (Size4, solveBench @DP.TwoPass.T "DP.TwoPass")
   , (Size4, solveBench @DP.OnePass.T "DP.OnePass")
-  , (Size4, solveBench @DP.FilteredOnePass.T "DP.FilteredOnePass")
-  , (Size4, solveBench @DP.FilteredOnePassTree.T "DP.FilteredOnePassTree")
+  , (Size6, solveBench @DP.FilteredOnePass.T "DP.FilteredOnePass")
+  , (Size6, solveBench @DP.FilteredOnePassTree.T "DP.FilteredOnePassTree")
   ]
 
 main = do
