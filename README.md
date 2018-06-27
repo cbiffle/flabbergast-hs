@@ -80,8 +80,9 @@ where the algorithm is slow enough that I get bored.)
 
 | Case                           | 6x6 ms | 4x4 ms | 2x2 ms |
 | ------------------------------ | -----: | -----: | -----: |
-| [Traversal.NotHeap]            | 12.0   | 5.92   | 3.13   |
-| [Traversal.Heap]               | 12.2   | 5.96   | 3.18   |
+| [Traversal.NotHeap]            | 10.2   | 4.58   | 3.03   |
+| [Traversal.Heap]               | 12.8   | 5.13   | 2.91   |
+| [Traversal.FilteredHeap]       | 44.4   | 17.7   | 10.6   |
 | [Traversal.FilteredTrie]       | 59.0   | 19.5   | 9.88   |
 | [DP.FilteredOnePassTree]       | 93.7   | 20.3   | 11.4   |
 | [DP.FilteredOnePass]           | 99.3   | 20.9   | 9.99   |
@@ -131,23 +132,24 @@ Note that this measures *allocations made*, not how much memory was in use at a
 given time -- most of the bytes allocated get GC'd immediately. This serves as a
 useful estimate of allocator/GC overhead.
 
-| Case                          |     Allocated |   GCs |
-| ----------------------------- | ------------: | ----: |
-| [Traversal.NotHeap]           |     3,336,832 |     3 |
-| [Traversal.FilteredHeap]      |     3,671,104 |     3 |
-| [Traversal.FilteredTrie]      |     3,790,416 |     3 |
-| [Traversal.IncrementalFPHAMT] |     4,391,072 |     4 |
-| [Traversal.Heap]              |     4,945,728 |     4 |
-| [Traversal.FilteredPrefixHAMT]|     8,966,888 |     6 |
-| [Traversal.FilteredPrefixSet] |    11,884,288 |    11 |
-| [DP.FilteredOnePassTree]      |    14,402,224 |    13 |
-| [DP.FilteredOnePass]          |    17,289,736 |    16 |
-| [Traversal.Trie]              |   332,071,664 |   268 |
-| [DP.TwoPass]                  |   911,207,128 |   881 |
-| [DP.OnePass]                  | 1,062,036,680 | 1,026 |
-| [Traversal.Set]               | 4,162,694,960 | 4,008 |
-| [Traversal.FilteredSet]       | 4,133,006,656 | 3,979 |
-| [Traversal.FilteredHAMT]      | 4,326,976,040 | 4,178 |
+| Case                         |     Allocated |   GCs |
+| ---------------------------- | ------------: | ----: |
+| Traversal.NotHeap            |     2,348,760 |     2 |
+| Traversal.FilteredHeap       |     3,671,080 |     3 |
+| Traversal.FilteredTrie       |     3,778,984 |     3 |
+| Traversal.Heap               |     4,336,208 |     4 |
+| Traversal.IncrementalFPHAMT  |     4,391,224 |     4 |
+| Traversal.FilteredPrefixHAMT |     9,254,624 |     7 |
+| Traversal.FilteredPrefixSet  |    12,222,256 |    11 |
+| DP.FilteredOnePassTree       |    14,401,832 |    13 |
+| Traversal.List               |    15,767,216 |    15 |
+| DP.FilteredOnePass           |    17,289,544 |    16 |
+| Traversal.Trie               |   370,129,536 |   357 |
+| DP.TwoPass                   |   911,207,128 |   881 |
+| DP.OnePass                   | 1,062,036,680 | 1,026 |
+| Traversal.FilteredSet        | 6,300,293,280 | 6,083 |
+| Traversal.Set                | 6,329,967,048 | 6,112 |
+| Traversal.FilteredHAMT       | 6,494,262,872 | 6,266 |
 
 The main lesson there, in my opinion, is that some algorithms that would win
 from a complexity-analysis perspective (like `Traversal.Trie`, or `DP.OnePass`
@@ -161,6 +163,7 @@ compared to `TwoPass`) lose in practice because of memory allocation patterns.
 [DP.OnePass]: src/DP/OnePass.hs
 [DP.TwoPass]: src/DP/TwoPass.hs
 [Traversal.FilteredHAMT]: src/Traversal/FilteredHAMT.hs
+[Traversal.FilteredHeap]: src/Traversal/FilteredHeap.hs
 [Traversal.FilteredPrefixHAMT]: src/Traversal/FilteredPrefixHAMT.hs
 [Traversal.FilteredPrefixSet]: src/Traversal/FilteredPrefixSet.hs
 [Traversal.FilteredSet]: src/Traversal/FilteredSet.hs

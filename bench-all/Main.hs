@@ -22,6 +22,7 @@ import qualified Traversal.Set
 import qualified Traversal.Trie
 import qualified Traversal.Heap
 import qualified Traversal.NotHeap
+import qualified Traversal.FilteredHeap
 
 data SizeClass = Size2 | Size3 | Size4 | Size6 deriving (Eq, Ord, Show)
 
@@ -51,7 +52,8 @@ benches =
   , (Size6, solveBench Traversal.FilteredPrefixHAMT.solver "Traversal.FilteredPrefixHAMT")
   , (Size6, solveBench Traversal.IncrementalFPHAMT.solver "Traversal.IncrementalFPHAMT")
   , (Size6, solveBench Traversal.Heap.solver "Traversal.Heap")
-  , (Size6, solveBench Traversal.Heap.solver "Traversal.NotHeap")
+  , (Size6, solveBench Traversal.FilteredHeap.solver "Traversal.FilteredHeap")
+  , (Size6, solveBench Traversal.NotHeap.solver "Traversal.NotHeap")
 
   , (Size4, solveBench DP.TwoPass.solver "DP.TwoPass")
   , (Size4, solveBench DP.OnePass.solver "DP.OnePass")
