@@ -2,8 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 import Weigh
 
-import Data.Typeable
-import Control.DeepSeq (force, NFData)
+import Control.DeepSeq (force)
 import Bench
 import Base
 

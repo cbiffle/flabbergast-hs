@@ -1,7 +1,6 @@
 module Traversal.Set (solver) where
 
 import qualified Data.Set as S
-import qualified Data.ByteString.Char8 as BS
 import Base
 import Uniq
 

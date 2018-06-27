@@ -2,8 +2,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 import Criterion.Main
 import Criterion.Types (reportFile)
-import Control.DeepSeq (force, NFData)
-import Paths_flabbergast
 import Base
 import Bench
 

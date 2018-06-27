@@ -17,10 +17,7 @@
 -- doesn't require post-filtering.
 module DP.TwoPass (solver) where
 
-import Control.Arrow ((&&&))
-import Data.List (sort, isSubsequenceOf, foldl')
 import Data.Maybe (listToMaybe, maybeToList)
-import Control.DeepSeq (NFData(..))
 import qualified Data.ByteString.Char8 as BS
 import Base
 

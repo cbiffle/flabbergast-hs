@@ -92,8 +92,8 @@ where the algorithm is slow enough that I get bored.)
 | [DP.TwoPass]                   |        | 222    | 47.9   |
 | [DP.OnePass]                   |        | 231    | 44.5   |
 | [Traversal.Trie]               |        | 305    | 313    |
-| [Traversal.FilteredHAMT]       |        |        | 11.4   |
 | [Traversal.FilteredSet]        |        |        | 9.99   |
+| [Traversal.FilteredHAMT]       |        |        | 11.4   |
 | [Traversal.Set]                |        |        | 41.7   |
 | [Traversal.List]               |        |        | 201    |
 
@@ -113,9 +113,9 @@ Observations:
   available in the board is a huge improvement to algorithms that build
   expensive dictionary-based datastructures (e.g. [Traversal.FilteredTrie] vs
   [Traversal.Trie]) and algorithms that require a full pass over the dictionary
-  (e.g. [DP.FilteredOnePass] vs [DP.OnePass]). It actualy *hurts* the
-  performance of Hecht traversals like [Traversal.Heap], which is why there is
-  no `FilteredHeap` shown above.
+  (e.g. [DP.FilteredOnePass] vs [DP.OnePass]). It actually *hurts* the
+  performance of Hecht traversals like [Traversal.Heap], as you can see by
+  comparing with [Traversal.FilteredHeap].
 
 - If you have a set-like data structure that is primarily used for membership
   tests (and you have sane hashcode implementations for your types), a [HAMT] 

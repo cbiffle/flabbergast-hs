@@ -10,7 +10,6 @@
 module Traversal.List (solver) where
 
 import Base
-import qualified Data.ByteString.Char8 as BS
 import Uniq
 
 import Traversal.Generic

@@ -1,7 +1,6 @@
 module DP.FilteredOnePassSpec where
 
 import Test.Hspec
-import Base
 import Checks
 import qualified DP.FilteredOnePass
 

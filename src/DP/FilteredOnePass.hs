@@ -2,7 +2,6 @@
 -- algorithm scales linearly in the size of the *used* dictionary.
 module DP.FilteredOnePass (solver) where
 
-import Data.List (foldl')
 import Data.Maybe (listToMaybe, maybeToList)
 import qualified Data.ByteString.Char8 as BS
 import Base

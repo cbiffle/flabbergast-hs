@@ -6,10 +6,7 @@
 -- and reject, self-intersecting paths.
 module DP.OnePass (solver) where
 
-import Control.Arrow ((&&&))
-import Data.List (foldl')
 import Data.Maybe (listToMaybe, maybeToList)
-import qualified Data.Set as S
 import qualified Data.ByteString.Char8 as BS
 import Base
 

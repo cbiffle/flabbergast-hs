@@ -4,7 +4,6 @@
 -- saving, vs a naive approach. It turns out not to save a whole lot.
 module Traversal.NotHeap (solver) where
 
-import qualified Data.Heap as H
 import Control.Arrow (second)
 import Control.Monad (when)
 import Control.Monad.Writer.Lazy (WriterT, tell, execWriterT)

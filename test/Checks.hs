@@ -6,7 +6,6 @@ import Test.Hspec
 import Test.Hspec.QuickCheck
 import Test.QuickCheck
 import Control.Arrow ((&&&))
-import Control.Monad
 import Data.List.Split
 import qualified Data.ByteString.Char8 as BS
 

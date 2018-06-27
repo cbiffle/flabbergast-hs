@@ -3,9 +3,7 @@ module Traversal.FilteredPrefixSet (solver) where
 
 import qualified Data.Set as S
 import qualified Data.ByteString.Char8 as BS
-import Control.Arrow ((&&&))
-import Data.List (sort, tails)
-import Control.DeepSeq (NFData(..))
+import Data.List (sort)
 import Base
 import Uniq
 import ByteStringUtil

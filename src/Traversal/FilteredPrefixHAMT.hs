@@ -2,9 +2,8 @@
 module Traversal.FilteredPrefixHAMT (solver) where
 
 import qualified Data.HashMap.Strict as H
-import Control.Arrow ((&&&))
 import Data.List (sort)
-import Control.DeepSeq (NFData(..), force)
+import Control.DeepSeq (force)
 import qualified Data.ByteString.Char8 as BS
 import Base
 import Uniq

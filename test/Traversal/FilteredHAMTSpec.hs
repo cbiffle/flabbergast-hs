@@ -1,7 +1,6 @@
 module Traversal.FilteredHAMTSpec where
 
 import Test.Hspec
-import Base
 import Checks
 import qualified Traversal.FilteredHAMT
 

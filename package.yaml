@@ -22,6 +22,10 @@ dependencies:
 data-files:
 - bench/dict.txt
 
+ghc-options:
+- -fwarn-unused-imports
+- -O2
+
 library:
   source-dirs: src
   dependencies:
@@ -36,15 +40,12 @@ library:
   - vector
   - heaps
   - mtl
-  ghc-options:
-  - -O2
 
 executables:
   solver:
     main:                Main.hs
     source-dirs:         bin
     ghc-options:
-    - -O2
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
@@ -80,7 +81,6 @@ benchmarks:
     source-dirs:  bench
     main:         Main.hs
     ghc-options:
-    - -O2
     - -threaded
     - -rtsopts
     dependencies:
@@ -91,7 +91,6 @@ benchmarks:
     source-dirs:  bench-all
     main:         Main.hs
     ghc-options:
-    - -O2
     - -threaded
     - -rtsopts
     dependencies:

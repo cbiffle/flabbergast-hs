@@ -2,9 +2,7 @@
 module Traversal.FilteredHAMT (solver) where
 
 import qualified Data.HashSet as H
-import Control.Arrow ((&&&))
 import Data.List (sort)
-import Control.DeepSeq (NFData(..), force)
 import qualified Data.ByteString.Char8 as BS
 import Base
 import Uniq

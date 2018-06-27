@@ -11,9 +11,8 @@ module Traversal.IncrementalFPHAMT (solver) where
 
 import qualified Data.HashMap.Strict as H
 import Data.Hashable
-import Control.Arrow ((&&&))
 import Data.List (sort, foldl')
-import Control.DeepSeq (NFData(..), force)
+import Control.DeepSeq (force)
 import qualified Data.ByteString.Char8 as BS
 import Base
 import Uniq

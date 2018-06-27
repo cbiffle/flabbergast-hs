@@ -1,12 +1,10 @@
 -- | Trie-based full traversal using ByteStrings and dictionary subsetting.
 module Traversal.FilteredTrie (solver) where
 
-import Control.Arrow ((&&&))
-import Control.DeepSeq (NFData(..))
 import qualified Data.Trie as T
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
-import Data.List (group, sort)
+import Data.List (sort)
 import Base
 import Uniq
 import ByteStringUtil

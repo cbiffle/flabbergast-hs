@@ -3,9 +3,7 @@
 module Bench where
 
 import Criterion.Main
-import Criterion.Types (reportFile)
 import Control.Arrow ((&&&))
-import Control.DeepSeq (force, NFData)
 import qualified Data.ByteString.Char8 as BS
 import Paths_flabbergast
 import Base
