@@ -30,7 +30,14 @@ data CharPath = Snoc { cpChar :: !Char
                      , cpIndex :: !Int
                      , cpRest :: !(Maybe CharPath)
                      }  -- FWIW, UNPACK does nothing here; -O2 suffices
-                     deriving (Ord, Show, Eq)
+                     deriving (Show)
+
+instance Eq CharPath where
+  Snoc c1 _ _ == Snoc c2 _ _ = c1 == c2
+
+instance Ord CharPath where
+  Snoc c1 _ _ `compare` Snoc c2 _ _ = c1 `compare` c2
+
 
 pathIndices (Snoc _ i mr) = i : maybe [] pathIndices mr
 
@@ -67,7 +74,7 @@ drain :: RawBoard -> H.Heap CharPath -> BS.ByteString -> Search ()
 drain b h prefix = case H.uncons h of
   Nothing -> pure ()
   Just (cp0, h') -> do
-    let (equivs, h'') = H.span (\e -> cpChar cp0 == cpChar e) h'
+    let (equivs, h'') = H.partition (== cp0) h'
         neighbors cp = map (\i -> Snoc (b `at` i) i (Just cp)) $
                        filter (not . (`usedIn` cp)) $
                        neighborIndices b (cpIndex cp)
