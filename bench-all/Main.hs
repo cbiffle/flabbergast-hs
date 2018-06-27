@@ -50,7 +50,7 @@ benches =
   , (Size3, solveBench @Traversal.FilteredHAMT.T "Traversal.FilteredHAMT")
 
   , (Size6, solveBench @Traversal.FilteredPrefixSet.T "Traversal.FilteredPrefixSet")
-  , (Size4, solveBench @Traversal.Trie.T "Traversal.Trie")
+  , (Size6, solveBench @Traversal.Trie.T "Traversal.Trie")
   , (Size6, solveBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
   , (Size6, solveBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
   , (Size6, solveBench @Traversal.IncrementalFPHAMT.T "Traversal.IncrementalFPHAMT")
