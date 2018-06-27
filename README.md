@@ -3,7 +3,7 @@ Flabbergast: Variations on a Theme
 
 This is a collection of algorithms for automatically playing a word game called
 Flabbergast. (Flabbergast is similar to [Boggle], but with key differences.
-I've renamed it out of respect for any possible trademarks[^1].)
+I've renamed it out of respect for any possible trademarks.)
 
 I started with a fairly naive approach, and incrementally improved things by
 applying both original ideas, and suggestions from the internet. The algorithms
@@ -71,55 +71,103 @@ The algorithms fall into two broad categories:
   how the path computation proceeds and which words are considered. Typically
   dominated by `O(d)` for a *d*-word dictionary.
 
-Leaderboard for 4x4 boards last time I updated this README (fastest to slowest
-on my Haswell machine):
+## Timing
 
-1. 5.92ms/4x4: [Traversal.NotHeap](src/Traversal/NotHeap.hs)
-1. 5.96ms/4x4: [Traversal.Heap](src/Traversal/Heap.hs)
-1. 19.5ms/4x4: [Traversal.FilteredTrie](src/Traversal/FilteredTrie.hs)
-1. 20.3ms/4x4: [DP.FilteredOnePassTree](src/DP/FilteredOnePassTree.hs)
-1. 20.9ms/4x4: [DP.FilteredOnePass](src/DP/FilteredOnePass.hs)
-1. 21.6ms/4x4: [Traversal.IncrementalFPHAMT](src/Traversal/IncrementalFPHAMT.hs)
-1. 24.4ms/4x4: [Traversal.FilteredPrefixHAMT](src/Traversal/FilteredPrefixHAMT.hs)
-1. 25.6ms/4x4: [Traversal.FilteredPrefixSet](src/Traversal/FilteredPrefixSet.hs)
-1. 222ms/4x4: [DP.TwoPass](src/DP/TwoPass.hs)
-1. 231ms/4x4: [DP.OnePass](src/DP/OnePass.hs)
-1. 305ms/4x4: [Traversal.Trie](src/Traversal/Trie.hs)
+Leaderboard for 6x6, 4x4, and 2x2 board sizes last time I updated this README:
 
-And among the algorithms that are too slow to complete a 4x4 board before I get
-bored, here are the times for a 2x2 board:
+(Measured on a lightly-loaded Intel Haswell i5-4200U. Blank cells are cases
+where the algorithm is slow enough that I get bored.)
 
-1. 10.5ms/2x2: [Traversal.FilteredHAMT](src/Traversal/FilteredHAMT.hs)
-1. 11.0ms/2x2: [Traversal.FilteredSet](src/Traversal/FilteredSet.hs)
-1. 42.1ms/2x2: [Traversal.Set](src/Traversal/Set.hs)
-1. 187ms/2x2: [Traversal.List](src/Traversal/List.hs)
+| Case                           | 6x6 ms | 4x4 ms | 2x2 ms |
+| ------------------------------ | -----: | -----: | -----: |
+| [Traversal.NotHeap]            | 12.0   | 5.92   | 3.13   |
+| [Traversal.Heap]               | 12.2   | 5.96   | 3.18   |
+| [Traversal.FilteredTrie]       | 59.0   | 19.5   | 9.88   |
+| [DP.FilteredOnePassTree]       | 93.7   | 20.3   | 11.4   |
+| [DP.FilteredOnePass]           | 99.3   | 20.9   | 9.99   |
+| [Traversal.IncrementalFPHAMT]  | 73.4   | 21.6   | 10.2   |
+| [Traversal.FilteredPrefixHAMT] | 120    | 24.4   | 9.85   |
+| [Traversal.FilteredPrefixSet]  | 117    | 25.6   | 11.3   |
+| [DP.TwoPass]                   |        | 222    | 47.9   |
+| [DP.OnePass]                   |        | 231    | 44.5   |
+| [Traversal.Trie]               |        | 305    | 313    |
+| [Traversal.FilteredHAMT]       |        |        | 11.4   |
+| [Traversal.FilteredSet]        |        |        | 9.99   |
+| [Traversal.Set]                |        |        | 41.7   |
+| [Traversal.List]               |        |        | 201    |
 
-And memory allocations per 2x2 board (note, this is *allocated*, not live --
-most gets garbage collected immediately).
+Observations:
 
-| Case                         |     Allocated |   GCs |
-| ---------------------------- | ------------: | ----: |
-| Traversal.NotHeap            |     3,336,832 |     3 |
-| Traversal.FilteredHeap       |     3,671,104 |     3 |
-| Traversal.FilteredTrie       |     3,790,416 |     3 |
-| Traversal.IncrementalFPHAMT  |     4,391,072 |     4 |
-| Traversal.Heap               |     4,945,728 |     4 |
-| Traversal.FilteredPrefixHAMT |     8,966,888 |     6 |
-| Traversal.FilteredPrefixSet  |    11,884,288 |    11 |
-| DP.FilteredOnePassTree       |    14,402,224 |    13 |
-| DP.FilteredOnePass           |    17,289,736 |    16 |
-| Traversal.Trie               |   332,071,664 |   268 |
-| DP.TwoPass                   |   911,207,128 |   881 |
-| DP.OnePass                   | 1,062,036,680 | 1,026 |
-| Traversal.Set                | 4,162,694,960 | 4,008 |
-| Traversal.FilteredSet        | 4,133,006,656 | 3,979 |
-| Traversal.FilteredHAMT       | 4,326,976,040 | 4,178 |
+- [Traversal.Heap] and [Traversal.NotHeap], which use a [clever algorithm
+  described by M.J. Hecht](http://www.mh-z.com/untangle/alg_heap.html), are
+  consistently the fastest. [Traversal.NotHeap] tends win between the two, which
+  shows that the performance advantage in Hecht's algorithm is not the use of
+  the heap data structure, but the linear dictionary traversal.
+
+- Using a naive [trie] makes traversals very fast, but runtime is dominated by
+  the cost of constructing said trie. Granted, the trie structure I'm currently
+  using is not very compact.
+
+- Filtering the dictionary to words that could be constructed out of the letters
+  available in the board is a huge improvement to algorithms that build
+  expensive dictionary-based datastructures (e.g. [Traversal.FilteredTrie] vs
+  [Traversal.Trie]) and algorithms that require a full pass over the dictionary
+  (e.g. [DP.FilteredOnePass] vs [DP.OnePass]). It actualy *hurts* the
+  performance of Hecht traversals like [Traversal.Heap], which is why there is
+  no `FilteredHeap` shown above.
+
+- If you have a set-like data structure that is primarily used for membership
+  tests (and you have sane hashcode implementations for your types), a [HAMT] 
+  wins out over size-balanced binary trees. This is what you'd expect from the
+  analysis of each structure, but it's nice to see it check out.
+
+[HAMT]: https://en.wikipedia.org/wiki/Hash_array_mapped_trie
+[trie]: https://en.wikipedia.org/wiki/Trie
+
+## Memory allocation
+
+This table gives total bytes allocated while solving a particular 2x2 board.
+Note that this measures *allocations made*, not how much memory was in use at a
+given time -- most of the bytes allocated get GC'd immediately. This serves as a
+useful estimate of allocator/GC overhead.
+
+| Case                          |     Allocated |   GCs |
+| ----------------------------- | ------------: | ----: |
+| [Traversal.NotHeap]           |     3,336,832 |     3 |
+| [Traversal.FilteredHeap]      |     3,671,104 |     3 |
+| [Traversal.FilteredTrie]      |     3,790,416 |     3 |
+| [Traversal.IncrementalFPHAMT] |     4,391,072 |     4 |
+| [Traversal.Heap]              |     4,945,728 |     4 |
+| [Traversal.FilteredPrefixHAMT]|     8,966,888 |     6 |
+| [Traversal.FilteredPrefixSet] |    11,884,288 |    11 |
+| [DP.FilteredOnePassTree]      |    14,402,224 |    13 |
+| [DP.FilteredOnePass]          |    17,289,736 |    16 |
+| [Traversal.Trie]              |   332,071,664 |   268 |
+| [DP.TwoPass]                  |   911,207,128 |   881 |
+| [DP.OnePass]                  | 1,062,036,680 | 1,026 |
+| [Traversal.Set]               | 4,162,694,960 | 4,008 |
+| [Traversal.FilteredSet]       | 4,133,006,656 | 3,979 |
+| [Traversal.FilteredHAMT]      | 4,326,976,040 | 4,178 |
 
 The main lesson there, in my opinion, is that some algorithms that would win
 from a complexity-analysis perspective (like `Traversal.Trie`, or `DP.OnePass`
 compared to `TwoPass`) lose in practice because of memory allocation patterns.
 
-[^1]: I haven't actually checked whether Boggle is currently trademarked;
-      coding is much more fun than searching the USPTO database.
 
 [Boggle]: https://en.wikipedia.org/wiki/Boggle
+
+[DP.FilteredOnePass]: src/DP/FilteredOnePass.hs
+[DP.FilteredOnePassTree]: src/DP/FilteredOnePassTree.hs
+[DP.OnePass]: src/DP/OnePass.hs
+[DP.TwoPass]: src/DP/TwoPass.hs
+[Traversal.FilteredHAMT]: src/Traversal/FilteredHAMT.hs
+[Traversal.FilteredPrefixHAMT]: src/Traversal/FilteredPrefixHAMT.hs
+[Traversal.FilteredPrefixSet]: src/Traversal/FilteredPrefixSet.hs
+[Traversal.FilteredSet]: src/Traversal/FilteredSet.hs
+[Traversal.FilteredTrie]: src/Traversal/FilteredTrie.hs
+[Traversal.Heap]: src/Traversal/Heap.hs
+[Traversal.IncrementalFPHAMT]: src/Traversal/IncrementalFPHAMT.hs
+[Traversal.List]: src/Traversal/List.hs
+[Traversal.NotHeap]: src/Traversal/NotHeap.hs
+[Traversal.Set]: src/Traversal/Set.hs
+[Traversal.Trie]: src/Traversal/Trie.hs
