@@ -5,7 +5,6 @@
 -- there's an off-the-shelf Trie implementation for them that meets my needs.
 module Traversal.Trie (T) where
 
-import Control.DeepSeq (NFData(..))
 import qualified Data.Trie as T
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
@@ -13,10 +12,6 @@ import Base
 import Uniq
 
 type Dictionary = T.Trie ()
-
--- Instance missing from package
-instance NFData a => NFData (T.Trie a) where
-  rnf = rnf . T.toList
 
 search :: Dictionary -> RawBoard -> IPath -> B.ByteString -> Results
 search d b path word
