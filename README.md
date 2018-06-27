@@ -92,8 +92,8 @@ where the algorithm is slow enough that I get bored.)
 | [DP.TwoPass]                   |        | 222    | 47.9   |
 | [DP.OnePass]                   |        | 231    | 44.5   |
 | [Traversal.Trie]               |        | 305    | 313    |
-| [Traversal.FilteredSet]        |        |        | 9.99   |
-| [Traversal.FilteredHAMT]       |        |        | 11.4   |
+| [Traversal.FilteredHAMT]       |        | 7214   | 11.4   |
+| [Traversal.FilteredSet]        |        | 8626   | 9.99   |
 | [Traversal.Set]                |        |        | 41.7   |
 | [Traversal.List]               |        |        | 201    |
 
