@@ -89,12 +89,12 @@ where the algorithm is slow enough that I get bored.)
 | [Traversal.IncrementalFPHAMT]  | 73.4   | 21.6   | 10.2   |
 | [Traversal.FilteredPrefixHAMT] | 120    | 24.4   | 9.85   |
 | [Traversal.FilteredPrefixSet]  | 117    | 25.6   | 11.3   |
-| [DP.TwoPass]                   |        | 222    | 47.9   |
-| [DP.OnePass]                   |        | 231    | 44.5   |
-| [Traversal.Trie]               |        | 305    | 313    |
+| [Traversal.Trie]               | 282    | 278    | 280    |
+| [DP.TwoPass]                   | 492    | 222    | 47.9   |
+| [DP.OnePass]                   | 511    | 231    | 44.5   |
 | [Traversal.FilteredHAMT]       |        | 7214   | 11.4   |
 | [Traversal.FilteredSet]        |        | 8626   | 9.99   |
-| [Traversal.Set]                |        |        | 41.7   |
+| [Traversal.Set]                |        | 10580  | 41.7   |
 | [Traversal.List]               |        |        | 201    |
 
 Observations:

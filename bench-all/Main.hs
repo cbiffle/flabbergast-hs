@@ -53,8 +53,8 @@ benches =
   , (Size6, solveBench Traversal.FilteredHeap.solver "Traversal.FilteredHeap")
   , (Size6, solveBench Traversal.NotHeap.solver "Traversal.NotHeap")
 
-  , (Size4, solveBench DP.TwoPass.solver "DP.TwoPass")
-  , (Size4, solveBench DP.OnePass.solver "DP.OnePass")
+  , (Size6, solveBench DP.TwoPass.solver "DP.TwoPass")
+  , (Size6, solveBench DP.OnePass.solver "DP.OnePass")
   , (Size6, solveBench DP.FilteredOnePass.solver "DP.FilteredOnePass")
   , (Size6, solveBench DP.FilteredOnePassTree.solver "DP.FilteredOnePassTree")
   ]
