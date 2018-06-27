@@ -1,8 +1,3 @@
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Bench where
@@ -25,6 +20,5 @@ board4x4 = mkGridOf ["INVS","TENE","APUU","GNDO"]
 
 -- | Benchmark that applies the solver repeatedly to a given dictionary and
 -- board, cooking each only once.
-solveBench :: forall s. (Solver s)
-           => String -> RawDictionary -> RawBoard -> Benchmark
-solveBench name d b = bench name $ nf (uncurry (solve @s)) (d, b)
+solveBench :: Solver -> String -> RawDictionary -> RawBoard -> Benchmark
+solveBench solver name d b = bench name $ nf (uncurry solver) (d, b)

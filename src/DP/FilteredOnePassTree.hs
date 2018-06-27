@@ -2,7 +2,7 @@
 
 -- | Dynamic programming, redux^3. Use a specialized data structure intended to
 -- improve step performance and reduce allocation.
-module DP.FilteredOnePassTree (T) where
+module DP.FilteredOnePassTree (solver) where
 
 import Data.List (foldl')
 import qualified Data.List.NonEmpty as NE
@@ -51,12 +51,10 @@ search1 b w =
                                   then Just (Start i)
                                   else Nothing
 
-data T
-
-instance Solver T where
-  solve d b =
-    let cs = BS.sort $ BS.pack $ ungrid b
-    in [r | (word, sorted) <- d
-          , sorted `isSubsequenceOf` cs
-          , r <- maybeToList $ search1 b word
-          ]
+solver :: Solver
+solver d b =
+  let cs = BS.sort $ BS.pack $ ungrid b
+  in [r | (word, sorted) <- d
+        , sorted `isSubsequenceOf` cs
+        , r <- maybeToList $ search1 b word
+        ]

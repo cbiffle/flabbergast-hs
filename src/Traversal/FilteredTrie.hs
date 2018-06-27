@@ -1,5 +1,5 @@
 -- | Trie-based full traversal using ByteStrings and dictionary subsetting.
-module Traversal.FilteredTrie (T) where
+module Traversal.FilteredTrie (solver) where
 
 import Control.Arrow ((&&&))
 import Control.DeepSeq (NFData(..))
@@ -26,14 +26,12 @@ search d b path word
        , r <- search (w' `T.submap` d) b p' w'
        ]
 
-data T
-
-instance Solver T where
-  solve d b = 
-    let cs = BC.pack $ sort $ ungrid b
-        d' = T.fromList $ [(w, ()) | (w, sw) <- d, sw `isSubsequenceOf` cs]
-    in uniqBy fst $
-       [r | pos <- indices b
-          , r <- search d' b [pos]
-                            (BC.singleton (b `at` pos))
-                 ]
+solver :: Solver
+solver d b = 
+  let cs = BC.pack $ sort $ ungrid b
+      d' = T.fromList $ [(w, ()) | (w, sw) <- d, sw `isSubsequenceOf` cs]
+  in uniqBy fst $
+     [r | pos <- indices b
+        , r <- search d' b [pos]
+                          (BC.singleton (b `at` pos))
+               ]

@@ -7,7 +7,7 @@
 --
 -- This implementation uses a list-like structure with O(1) 'snoc' and 'hash'
 -- to reduce the overhead of both candidate construction and membership checks.
-module Traversal.IncrementalFPHAMT (T) where
+module Traversal.IncrementalFPHAMT (solver) where
 
 import qualified Data.HashMap.Strict as H
 import Data.Hashable
@@ -62,17 +62,15 @@ search d b path word =
                 ]
         else [])
 
-data T
-
 prefixPattern = (True, False) : repeat (False, True)
 
-instance Solver T where
-  solve d b =
-    let cs = BS.pack $ sort $ ungrid b
-        df = [mkIWord w | (w, sw) <- d, sw `isSubsequenceOf` cs]
-        d' = H.fromListWith (\(a, b) (c, d) -> force (a || c, b || d)) $
-             [e | w <- df, e <- zip (prefixes w) prefixPattern]
-    in uniqBy fst $
-       [r | pos <- indices b
-          , r <- search d' b [pos] $ Nil `snoc` (b `at` pos)
-          ]
+solver :: Solver
+solver d b =
+  let cs = BS.pack $ sort $ ungrid b
+      df = [mkIWord w | (w, sw) <- d, sw `isSubsequenceOf` cs]
+      d' = H.fromListWith (\(a, b) (c, d) -> force (a || c, b || d)) $
+           [e | w <- df, e <- zip (prefixes w) prefixPattern]
+  in uniqBy fst $
+     [r | pos <- indices b
+        , r <- search d' b [pos] $ Nil `snoc` (b `at` pos)
+        ]

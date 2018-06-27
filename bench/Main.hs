@@ -1,7 +1,3 @@
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
 import Criterion.Main
@@ -33,10 +29,10 @@ boards = [ ("4x4", board4x4)
          ]
 
 benches =
-  [ solveBench @Set.T "set"
-  , solveBench @Trie.T "trie"
-  , solveBench @DP.T "dp"
-  , solveBench @Heap.T "heap"
+  [ solveBench Set.solver "set"
+  , solveBench Trie.solver "trie"
+  , solveBench DP.solver "dp"
+  , solveBench Heap.solver "heap"
   ]
 
 main = do

@@ -4,7 +4,7 @@
 -- DP solution. In each step, it propagates all valid paths through a given
 -- tile for a given word. By maintaining the path information it can detect,
 -- and reject, self-intersecting paths.
-module DP.OnePass (T) where
+module DP.OnePass (solver) where
 
 import Control.Arrow ((&&&))
 import Data.List (foldl')
@@ -31,9 +31,7 @@ search1 b w =
   BS.foldl' (step b) seed w
   where seed = b `gfor` \_ _ -> [[]]
 
-data T
-
-instance Solver T where
-  solve d b = [r | (word, _) <- d
-                 , r <- maybeToList $ search1 b word
-                 ]
+solver :: Solver
+solver d b = [r | (word, _) <- d
+                , r <- maybeToList $ search1 b word
+                ]

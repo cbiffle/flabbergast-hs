@@ -7,7 +7,7 @@
 --
 -- This is, as you might guess, not very fast. It is, however, not as slow as I
 -- expected.
-module Traversal.List (T) where
+module Traversal.List (solver) where
 
 import Base
 import qualified Data.ByteString.Char8 as BS
@@ -15,8 +15,6 @@ import Uniq
 
 import Traversal.Generic
 
-data T
-
-instance Solver T where
-  solve d = uniqBy fst .  -- because this *will* generate duplicate solutions
-            paths (exhaustive (`elem` map fst d))
+solver :: Solver
+solver d = uniqBy fst .  -- because this *will* generate duplicate solutions
+           paths (exhaustive (`elem` map fst d))

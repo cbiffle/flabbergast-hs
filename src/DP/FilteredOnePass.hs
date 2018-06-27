@@ -1,6 +1,6 @@
 -- | Dynamic programming, redux^2. Filtering the dictionary, since this
 -- algorithm scales linearly in the size of the *used* dictionary.
-module DP.FilteredOnePass (T) where
+module DP.FilteredOnePass (solver) where
 
 import Data.List (foldl')
 import Data.Maybe (listToMaybe, maybeToList)
@@ -26,12 +26,10 @@ search1 b w =
   BS.foldl' (step b) seed w
   where seed = b `gfor` \_ _ -> [[]]
 
-data T
-
-instance Solver T where
-  solve d b =
-    let cs = BS.sort $ BS.pack $ ungrid b
-    in [r | (word, sorted) <- d
-          , sorted `isSubsequenceOf` cs
-          , r <- maybeToList $ search1 b word
-          ]
+solver :: Solver
+solver d b =
+  let cs = BS.sort $ BS.pack $ ungrid b
+  in [r | (word, sorted) <- d
+        , sorted `isSubsequenceOf` cs
+        , r <- maybeToList $ search1 b word
+        ]

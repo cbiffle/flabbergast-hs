@@ -1,7 +1,3 @@
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE FlexibleInstances #-}
 module Base where
 
@@ -67,8 +63,7 @@ ipath g = map (goPositions g V.!)
 
 type RawBoard = GridOf Char
 
-class Solver s where
-  solve :: RawDictionary -> RawBoard -> Results
+type Solver = RawDictionary -> RawBoard -> Results
 
 boardWidth, boardHeight :: RawBoard -> Int
 boardWidth = goWidth

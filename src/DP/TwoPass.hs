@@ -15,7 +15,7 @@
 --
 -- This algorithm has the advantage of not producing duplicate words, so it
 -- doesn't require post-filtering.
-module DP.TwoPass (T) where
+module DP.TwoPass (solver) where
 
 import Control.Arrow ((&&&))
 import Data.List (sort, isSubsequenceOf, foldl')
@@ -59,10 +59,8 @@ expensive b target = listToMaybe $
          , r <- search (BS.tail w) (i : path)
          ]
 
-data T
-
-instance Solver T where
-  solve d b = [r | (word, _) <- d
-                 , cheap b word
-                 , r <- maybeToList $ expensive b word
-                 ]
+solver :: Solver
+solver d b = [r | (word, _) <- d
+                , cheap b word
+                , r <- maybeToList $ expensive b word
+                ]

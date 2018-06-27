@@ -2,7 +2,7 @@
 --
 -- Customized structure here gives slightly better construction and lookup
 -- performance than the off-the-shelf options.
-module Traversal.Trie (T) where
+module Traversal.Trie (solver) where
 
 import qualified Data.Trie as T
 import qualified Data.ByteString as B
@@ -44,13 +44,11 @@ search b t path =
      , r <- search b t' (i : path)
      ]
 
-data T
-
-instance Solver T where
-  solve d b =
-    let trie = fromSortedList $ map fst d
-    in uniqBy fst $
-       [r | i <- indices b
-          , t <- maybeToList $ tlookup (b `at` i) trie
-          , r <- search b t [i]
-          ]
+solver :: Solver
+solver d b =
+  let trie = fromSortedList $ map fst d
+  in uniqBy fst $
+     [r | i <- indices b
+        , t <- maybeToList $ tlookup (b `at` i) trie
+        , r <- search b t [i]
+        ]

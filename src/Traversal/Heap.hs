@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 -- | Heap-based solver.
 --
 -- This is a very different algorithm that does dictionary-guided traversal
@@ -11,7 +9,7 @@
 -- Compared to the other traversals, it has the useful property that it
 -- discovers paths across the board in strict alphabetical order. This lets it
 -- scan the dictionary in a single pass.
-module Traversal.Heap where
+module Traversal.Heap (solver) where
 
 import qualified Data.Heap as H
 import Control.Arrow (second)
@@ -83,11 +81,9 @@ drain b h prefix = case H.uncons h of
     check b h2 (prefix `BS.snoc` cpChar cp0) cp0
     drain b h'' prefix
 
-data T
-
-instance Solver T where
-  solve d b = map (second (ipath b)) $ (`appEndo` []) $
-              flip evalState d $ execWriterT $
-              check b start BS.empty undefined  -- TODO hack
-    where start = H.fromList $ map (\(i, c) -> Snoc c i Nothing) $
-                  zip [0..] (ungrid b)
+solver :: Solver
+solver d b = map (second (ipath b)) $ (`appEndo` []) $
+             flip evalState d $ execWriterT $
+             check b start BS.empty undefined  -- TODO hack
+  where start = H.fromList $ map (\(i, c) -> Snoc c i Nothing) $
+                zip [0..] (ungrid b)

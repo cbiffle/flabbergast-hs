@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeApplications #-}
-
 import Control.Arrow ((&&&))
 import Control.Monad (forM_)
 import Base
@@ -10,4 +8,4 @@ main = do
   dict <- map (id &&& BS.sort) . BS.lines <$> BS.readFile "dict.txt"
   board <- mkGridOf . BS.lines <$> BS.readFile "board.txt"
 
-  forM_ (solve @ALG.T dict board) $ \(w, _) -> BS.putStrLn w
+  forM_ (ALG.solver dict board) $ \(w, _) -> BS.putStrLn w

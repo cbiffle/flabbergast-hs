@@ -1,7 +1,3 @@
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
 import Criterion.Main
@@ -43,24 +39,24 @@ boards = [ (Size2, mkGridOf ["AW", "OP"])
 
 
 benches =
-  [ (Size4, solveBench @Traversal.List.T "Traversal.List")
+  [ (Size4, solveBench Traversal.List.solver "Traversal.List")
 
-  , (Size3, solveBench @Traversal.Set.T "Traversal.Set")
-  , (Size3, solveBench @Traversal.FilteredSet.T "Traversal.FilteredSet")
-  , (Size3, solveBench @Traversal.FilteredHAMT.T "Traversal.FilteredHAMT")
+  , (Size3, solveBench Traversal.Set.solver "Traversal.Set")
+  , (Size3, solveBench Traversal.FilteredSet.solver "Traversal.FilteredSet")
+  , (Size3, solveBench Traversal.FilteredHAMT.solver "Traversal.FilteredHAMT")
 
-  , (Size6, solveBench @Traversal.FilteredPrefixSet.T "Traversal.FilteredPrefixSet")
-  , (Size6, solveBench @Traversal.Trie.T "Traversal.Trie")
-  , (Size6, solveBench @Traversal.FilteredTrie.T "Traversal.FilteredTrie")
-  , (Size6, solveBench @Traversal.FilteredPrefixHAMT.T "Traversal.FilteredPrefixHAMT")
-  , (Size6, solveBench @Traversal.IncrementalFPHAMT.T "Traversal.IncrementalFPHAMT")
-  , (Size6, solveBench @Traversal.Heap.T "Traversal.Heap")
-  , (Size6, solveBench @Traversal.Heap.T "Traversal.NotHeap")
+  , (Size6, solveBench Traversal.FilteredPrefixSet.solver "Traversal.FilteredPrefixSet")
+  , (Size6, solveBench Traversal.Trie.solver "Traversal.Trie")
+  , (Size6, solveBench Traversal.FilteredTrie.solver "Traversal.FilteredTrie")
+  , (Size6, solveBench Traversal.FilteredPrefixHAMT.solver "Traversal.FilteredPrefixHAMT")
+  , (Size6, solveBench Traversal.IncrementalFPHAMT.solver "Traversal.IncrementalFPHAMT")
+  , (Size6, solveBench Traversal.Heap.solver "Traversal.Heap")
+  , (Size6, solveBench Traversal.Heap.solver "Traversal.NotHeap")
 
-  , (Size4, solveBench @DP.TwoPass.T "DP.TwoPass")
-  , (Size4, solveBench @DP.OnePass.T "DP.OnePass")
-  , (Size6, solveBench @DP.FilteredOnePass.T "DP.FilteredOnePass")
-  , (Size6, solveBench @DP.FilteredOnePassTree.T "DP.FilteredOnePassTree")
+  , (Size4, solveBench DP.TwoPass.solver "DP.TwoPass")
+  , (Size4, solveBench DP.OnePass.solver "DP.OnePass")
+  , (Size6, solveBench DP.FilteredOnePass.solver "DP.FilteredOnePass")
+  , (Size6, solveBench DP.FilteredOnePassTree.solver "DP.FilteredOnePassTree")
   ]
 
 main = do

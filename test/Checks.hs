@@ -1,6 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Checks (genericSpec) where
@@ -18,11 +15,10 @@ import Base
 mkDict :: [BS.ByteString] -> RawDictionary
 mkDict = fmap (id &&& BS.sort)
 
-genericSpec :: forall s. (Solver s) => Int -> Spec
-genericSpec n = do
+genericSpec :: Solver -> Int -> Spec
+genericSpec solver n = do
   let bprop :: (Testable p) => p -> Property
       bprop = mapSize (const n) . property
-      solver = solve @s
 
   context "corner cases" $ do
     it "finds no solutions in an empty board" $ property $

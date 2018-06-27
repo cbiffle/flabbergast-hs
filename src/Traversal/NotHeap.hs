@@ -1,10 +1,8 @@
-{-# LANGUAGE BangPatterns #-}
-
 -- | Heap-based solver, only using lists instead of heaps.
 --
 -- This is me trying to account for how much the binomial heaps are actually
 -- saving, vs a naive approach. It turns out not to save a whole lot.
-module Traversal.NotHeap where
+module Traversal.NotHeap (solver) where
 
 import qualified Data.Heap as H
 import Control.Arrow (second)
@@ -73,11 +71,9 @@ uniq [] = []
 uniq [a] = [a]
 uniq (a : rest) = a : uniq (dropWhile (== a) rest)
 
-data T
-
-instance Solver T where
-  solve d b = map (second (ipath b)) $ (`appEndo` []) $
-              flip evalState d $ execWriterT $
-              check b start BS.empty undefined  -- TODO hack
-    where start = sort $ map (\(i, c) -> Snoc c i Nothing) $
-                  zip [0..] (ungrid b)
+solver :: Solver
+solver d b = map (second (ipath b)) $ (`appEndo` []) $
+             flip evalState d $ execWriterT $
+             check b start BS.empty undefined  -- TODO hack
+  where start = sort $ map (\(i, c) -> Snoc c i Nothing) $
+                zip [0..] (ungrid b)

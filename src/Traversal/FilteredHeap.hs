@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 -- | Heap-based solver using filtered dictionary.
 module Traversal.FilteredHeap where
 
@@ -68,14 +66,12 @@ drain b h prefix = case H.uncons h of
     check b h2 (prefix `BS.snoc` cpChar cp0) cp0
     drain b h'' prefix
 
-data T
-
-instance Solver T where
-  solve d b =
-    let cs = BS.pack $ sort $ ungrid b
-        d' = [w | (w, s) <- d, s `isSubsequenceOf` cs]
-    in map (second (ipath b)) $ (`appEndo` []) $
-       flip evalState d' $ execWriterT $
-       check b start BS.empty undefined  -- TODO hack
-    where start = H.fromList $ map (\(i, c) -> Snoc c i Nothing) $
-                  zip [0..] (ungrid b)
+solver :: Solver
+solver d b =
+  let cs = BS.pack $ sort $ ungrid b
+      d' = [w | (w, s) <- d, s `isSubsequenceOf` cs]
+  in map (second (ipath b)) $ (`appEndo` []) $
+     flip evalState d' $ execWriterT $
+     check b start BS.empty undefined  -- TODO hack
+  where start = H.fromList $ map (\(i, c) -> Snoc c i Nothing) $
+                zip [0..] (ungrid b)
